@@ -20,31 +20,34 @@ class VentasModelo
   static public function mdlRegistrarVenta($datos, $nro_boleta, $total_venta, $descripcion_venta, $id_cliente, $vendedor, $obs_venta, $fechaEntrega, $tipoPago, $docVenta, $usuarioID)
   {
 
-    //return $nro_boleta . ' ' . $obs_venta . ' ' . $id_cliente . ' ' . $id_vendedor;
-
-    $stmt = Conexion::conectar()->prepare("INSERT INTO ventas(nro_boleta,
-                                                                    descripcion,
-                                                                    total,
-                                                                    cliente_id,
-                                                                    observa_venta,
-                                                                    fecha_entrega,
-                                                                    vendedorID,
-                                                                    tipoPago,
-                                                                    docuVenta, usuarioID, fecha_e)         
-                                                VALUES(:nro_boleta,
-                                                      :descripcion,
-                                                      :total_venta,
-                                                      :id_cliente,
-                                                      :obs_venta,
-                                                      :fechaEntrega,
-                                                      :codVendedor,
-                                                      :tipoPago,
-                                                      :docVenta,
-                                                      :usuarioID,
-                                                      :fecha_e)");
     date_default_timezone_set("America/La_Paz");
     $fechaIng = date("Y-m-d", strtotime($fechaEntrega));
     $fechaPre = date("Y-m-d");
+
+    // GUARDAR REFERENCIA A LA CONEXIÓN PDO
+    $dbh = Conexion::conectar();
+
+    $stmt = $dbh->prepare("INSERT INTO ventas(nro_boleta,
+                                              descripcion,
+                                              total,
+                                              cliente_id,
+                                              observa_venta,
+                                              fecha_entrega,
+                                              vendedorID,
+                                              tipoPago,
+                                              docuVenta, usuarioID, fecha_e)         
+                          VALUES(:nro_boleta,
+                                :descripcion,
+                                :total_venta,
+                                :id_cliente,
+                                :obs_venta,
+                                :fechaEntrega,
+                                :codVendedor,
+                                :tipoPago,
+                                :docVenta,
+                                :usuarioID,
+                                :fecha_e)");
+
 
     $stmt->bindParam(":nro_boleta", $nro_boleta, PDO::PARAM_STR);
     $stmt->bindParam(":descripcion", $descripcion_venta, PDO::PARAM_STR);
@@ -61,9 +64,12 @@ class VentasModelo
 
     if ($stmt->execute()) {
 
+      // OBTENER EL ID DEL PDO (no del statement)
+      $id_venta_inserted = $dbh->lastInsertId();
+
       $stmt = null;
 
-      $stmt = Conexion::conectar()->prepare("UPDATE empresa SET nro_correlativo_venta = LPAD(nro_correlativo_venta + 1,8,'0')");
+      $stmt = $dbh->prepare("UPDATE empresa SET nro_correlativo_venta = LPAD(nro_correlativo_venta + 1,8,'0')");
 
       if ($stmt->execute()) {
 
@@ -73,20 +79,22 @@ class VentasModelo
 
           $listaProductos = explode(",", $datos[$i]);
 
-          $stmt = Conexion::conectar()->prepare("INSERT INTO detalle_ventas(nro_boleta,
-                                                                            codigo_producto, 
-                                                                            cantidad, 
-                                                                            total_producto, 
-                                                                            codProducto, 
-                                                                            precio, 
-                                                                            descuento_porcentual) 
-                                                            VALUES(:nro_boleta,
-                                                                    :codigo_producto,
-                                                                    :cantidad,
-                                                                    :total_venta,
-                                                                    :cod_producto,
-                                                                    :precio,
-                 :descuento)");
+          $stmt = $dbh->prepare("INSERT INTO detalle_ventas(nro_boleta,
+                                                            codigo_producto, 
+                                                            cantidad, 
+                                                            total_producto, 
+                                                            codProducto, 
+                                                            precio, 
+                                                            descuento_porcentual, 
+                                                            venta_id) 
+                                  VALUES(:nro_boleta,
+                                          :codigo_producto,
+                                          :cantidad,
+                                          :total_venta,
+                                          :cod_producto,
+                                          :precio,
+                                          :descuento,
+                                          :id_venta)");
 
           $stmt->bindParam(":nro_boleta", $nro_boleta, PDO::PARAM_STR);
           $stmt->bindParam(":codigo_producto", $listaProductos[0], PDO::PARAM_STR);
@@ -95,16 +103,31 @@ class VentasModelo
           $stmt->bindParam(":cod_producto", $listaProductos[3], PDO::PARAM_INT);
           $stmt->bindParam(":precio", $listaProductos[4], PDO::PARAM_STR);
           $stmt->bindParam(":descuento", $listaProductos[5], PDO::PARAM_STR);
+          $stmt->bindParam(":id_venta", $id_venta_inserted, PDO::PARAM_INT);
 
           if ($stmt->execute()) {
 
             $stmt = null;
 
-            $stmt = Conexion::conectar()->prepare("UPDATE productos SET stock = stock - :cantidad
-                                                                WHERE codigo_producto = :codigo_producto");
+            $concepto = 'VENTA';
+
+            $stmt = $dbh->prepare("call prc_registrar_kardex_ventas (:codigo_producto,
+                                                                     upper(:concepto),
+                                                                     upper(:comprobante),
+                                                                     :cantidad_venta,
+                                                                     :precio_venta)");
 
             $stmt->bindParam(":codigo_producto", $listaProductos[0], PDO::PARAM_STR);
-            $stmt->bindParam(":cantidad", $listaProductos[1], PDO::PARAM_STR);
+            $stmt->bindParam(":concepto", $concepto, PDO::PARAM_STR);
+            $stmt->bindParam(":comprobante", $nro_boleta, PDO::PARAM_STR);
+            $stmt->bindParam(":cantidad_venta", $listaProductos[1], PDO::PARAM_STR);
+            $stmt->bindParam(":precio_venta", $listaProductos[4], PDO::PARAM_STR);
+
+            // $stmt = Conexion::conectar()->prepare("UPDATE productos SET stock = stock - :cantidad
+            //                                                     WHERE codigo_producto = :codigo_producto");
+
+            // $stmt->bindParam(":codigo_producto", $listaProductos[0], PDO::PARAM_STR);
+            // $stmt->bindParam(":cantidad", $listaProductos[1], PDO::PARAM_STR);
 
             if ($stmt->execute()) {
               $resultado = "Se registró la venta correctamente.";
@@ -116,11 +139,12 @@ class VentasModelo
           }
         }
 
-
         return $resultado;
 
         $stmt = null;
       }
+    } else {
+      return "Error al registrar la venta";
     }
   }
 

@@ -1133,7 +1133,7 @@ function realizarVenta() {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, deceo imprimir!',
-            cancelButtonText: 'Cancelar!',
+            cancelButtonText: 'No, deceo imprimir por ahora!',
           }).then((result) => {
             if (result.isConfirmed) {
 
