@@ -61,7 +61,12 @@ if (isset($_POST['accion'])) {
         case 'aumentar_disminuir_stock': //3
 
             if ($_POST['tipo_movimiento'] == 'aumentar_stock') {
-                $response = ProductosModelo::mdlAumentarStock($_POST["codigo_producto"], $_POST["nuevoStock"]);
+                $response = ProductosModelo::mdlAumentarStock($_POST["codigo_producto"], 
+                                                            $_POST["nuevoStock"], 
+                                                            $_POST["precioCompra"], 
+                                                            $_POST["precioVenta"], 
+                                                            $_POST["documentoCompra"], 
+                                                            $_POST["observaCompra"]);
                 echo json_encode($response);
             } else {
                 $response = ProductosModelo::mdlDisminuirStock($_POST["codigo_producto"], $_POST["nuevoStock"]);

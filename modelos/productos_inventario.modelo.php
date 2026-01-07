@@ -487,28 +487,37 @@ class ProductosModelo
     /*=============================================
     AUMENTAR STOCK
     =============================================*/
-    static public function mdlAumentarStock($codigo_producto, $nuevo_stock)
+    static public function mdlAumentarStock($codigo_producto, 
+                                            $nuevo_stock, 
+                                            $precio_compra, 
+                                            $precio_venta,
+                                            $documento_compra,
+                                            $observa_compra)
     {
 
-        $concepto = 'AUMENTO DE STOCK POR MODULO DE INVENTARIO';
+        $concepto = 'COMPRAS';
 
         try {
 
             $dbh = Conexion::conectar();
 
-            $stmt = $dbh->prepare("call prc_registrar_kardex_bono(?,?,?);");
+            $stmt = $dbh->prepare("call prc_registrar_kardex_bono(?,?,?,?,?,upper(?),?);");
 
             $dbh->beginTransaction();
             $stmt->execute(array(
                 $codigo_producto,
                 $concepto,
-                $nuevo_stock
+                $nuevo_stock,
+                $precio_compra, 
+                $precio_venta,
+                $documento_compra,
+                $observa_compra
             ));
 
             $dbh->commit();
 
             $respuesta["tipo_msj"] = "success";
-            $respuesta["msj"] = "Se aumento el stock del producto correctamente";
+            $respuesta["msj"] = "Se aumentó el stock del producto correctamente";
         } catch (Exception $e) {
             $dbh->rollBack();
             $respuesta["tipo_msj"] = "error";
@@ -546,7 +555,7 @@ class ProductosModelo
         } catch (Exception $e) {
             $dbh->rollBack();
             $respuesta["tipo_msj"] = "error";
-            $respuesta["msj"] = "Error al dismiunir el stock del producto " . $e->getMessage();
+            $respuesta["msj"] = "Error al disminuir el stock del producto " . $e->getMessage();
         }
 
         return $respuesta;
@@ -621,31 +630,12 @@ class ProductosModelo
     {
 
         $stmt = Conexion::conectar()->prepare("SELECT p.codigo_producto, 
-                                                    p.id_categoria, 
-                                                    p.descripcion, 
-                                                    p.id_tipo_afectacion_igv, 
-                                                    case when p.id_tipo_afectacion_igv = 10 
-                                                            then 'GRAVADO' 
-                                                        when p.id_tipo_afectacion_igv = 20 
-                                                            then 'EXONERADO' 
-                                                        when p.id_tipo_afectacion_igv = 30
-                                                            then 'INAFECTO' 
-                                                    end as tipo_afectacion_igv,
-                                                    p.id_unidad_medida, 
-                                                    cum.descripcion as unidad_medida,
-                                                    p.costo_unitario, 
-                                                    p.precio_unitario_con_igv, 
-                                                    p.precio_unitario_sin_igv, 
-                                                    p.precio_unitario_mayor_con_igv, 
-                                                    p.precio_unitario_mayor_sin_igv, 
-                                                    p.precio_unitario_oferta_con_igv, 
-                                                    p.precio_unitario_oferta_sin_igv, 
-                                                    p.stock,         
-                                                    p.costo_total,
-                                                    case when p.id_tipo_afectacion_igv = 10 then 1.18 else 1 end as factor_igv,
-                                                    case when p.id_tipo_afectacion_igv = 10 then 0.18 else 0 end as porcentaje_igv
-                                                FROM productos p inner join tipo_afectacion_igv tai on tai.codigo = p.id_tipo_afectacion_igv
-                                                                inner join codigo_unidad_medida cum on cum.id = p.id_unidad_medida
+                                                        p.nombre, 
+                                                        p.unidad_medida, 
+                                                        p.precio_venta, 
+                                                        p.stock,         
+                                                        p.costo_total
+                                                FROM productos p
                                                 WHERE codigo_producto = :codigoProducto");
 
         $stmt->bindParam(":codigoProducto", $codigoProducto, PDO::PARAM_STR);

@@ -404,7 +404,7 @@ VENTA MODAL PARA REGISTRAR O ACTUALIZAR UN PRODUCTO
 <!-- =============================================================================================================================
 VENTA MODAL PARA AUMENTAR O DISMINUIR EL STOCK DEL PRODUCTO
 ===============================================================================================================================-->
-<div class="modal fade" id="mdlGestionarStock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="mdlGestionarStock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
@@ -455,8 +455,144 @@ VENTA MODAL PARA AUMENTAR O DISMINUIR EL STOCK DEL PRODUCTO
 
     </div>
   </div>
+</div> -->
+<!-- VENTANA MODAL PARA MODIFICAR STOCK -->
+<div class="modal fade" id="mdlGestionarStock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header bg-gray py-2">
+        <h6 class="modal-title" id="titulo_modal_stock"></h6>
+        <span style="color: blue;"> | <?php echo date("d/m/Y"); ?>
+          |</span>
+        <button type="button" class="btn-close text-white fs-6" data-bs-dismiss="modal" aria-label="Close"
+          id="btnCerrarModalStock">
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="box-body">
+
+          <?php
+          require('database.php');
+          $query = "SELECT * FROM proveedores WHERE estado = 'activo' ORDER BY nombre_empresa";
+          $result = mysqli_query($connection, $query);
+          ?>
+
+          <table class="table-responsive table-condensed tbl_datosStock">
+            <tr>
+              <td><label for="" class="form-label text-primary" style="display: block;">Id: <span id="stock_idProducto"
+                    style="color: black;"></span></label></td>
+
+              <td><label for="" class="form-label text-primary" style="display: block;">Precio Compra: <span
+                    id="stock_precioProducto" style="color: black;"></span></label></td>
+            </tr>
+
+            <tr>
+              <td><label for="" class="form-label text-primary" style="display: block;">Codigo: <span
+                    id="stock_codigoProducto" style="color: black;"></span></label></td>
+
+              <td><label for="" class="form-label text-primary" style="display: block;">Producto: <span
+                    id="stock_Producto" style="color: black;"></span></label></td>
+            </tr>
+
+            <tr>
+              <td><label for="" class="form-label text-primary" style="display: block;">Stock: <span id="stock_Stock"
+                    style="color: black;"></span></label></td>
+              <td><label for="" class="form-label text-danger">Nuevo Stock: <span id="stock_NuevoStock"
+                    class="text-secondary"></span></label><br></td>
+            </tr>
+          </table>
+
+          <table class="table-responsive table-condensed tbl_adicionaStock">
+            <tr>
+              <td><label class="" for="iptStockSumar">
+                  <i class="fa fa-plus-circle fs-6"></i> <span class="small" id="titulo_modal_label"></span>
+                </label>
+                <input type="number" min="0" class="form-control form-control-sm" id="iptStockSumar" placeholder="">
+              </td>
+
+              <td><label class="" for="iptPrecioCompra">
+                  <i class="fa fa-donate fs-6"></i> <span class="small">Precio Compra</span>
+                </label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-sm" id="iptPrecioCompra"
+                  placeholder="Precio Compra">
+              </td>
+              <td><label class="" for="iptPrecioVenta">
+                  <i class="fa fa-donate fs-6"></i> <span class="small">Precio Venta</span>
+                </label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-sm" id="iptPrecioVenta"
+                  placeholder="Precio Venta">
+              </td>
+              <td><label class="" for="iptPrecioFeria">
+                  <i class="fa fa-donate fs-6"></i> <span class="small">Precio Feria</span>
+                </label>
+                <input type="number" step="0.01" min="0" class="form-control form-control-sm" id="iptPrecioFeria"
+                  placeholder="Precio Feria">
+              </td>
+            </tr>
+
+            <tr>
+              <td><label class="" for="iptDocumento">
+                  <i class="fa fa-book fs-6"></i> <span class="small">N° Documento</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptDocumento" placeholder="N° Doc. Compra.">
+              </td>
+              <td>
+                <label class="" for="selProv">
+                  <i class="fa fa-truck fs-6"></i> <span class="small">Agregar Proveedor</span>
+                </label>
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selProv"
+                  name="selProv" style="width: 100%">
+                  <option value="0"> -----Seleccione Proveedor-----</option>
+                  <?php
+
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    echo '<option value="' . $row['proveedor_id'] . '">' . $row['nombre_empresa'] . '</option>';
+                  } ?>
+
+                </select>
+              </td>
+
+              <td>
+                <label class="" for="fechaRegistro">
+                  <i class="fa fa-calendar fs-6"></i> <span class="small">Fecha de Registro</span>
+                </label>
+                <input type="date" class="form-control form-control-sm" id="fechaRegistro" placeholder="Fecha Registro">
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="3">
+                <label class="" for="iptObserva">
+                  <i class="fa fa-pencil fs-4"></i> <span class="small">Observaciones</span>
+                </label>
+                <input type="text" class="form-control form-control-sm"
+                  onKeyUp="javascript:this.value=this.value.toUpperCase();" id="iptObserva"
+                  placeholder="Registre Observaciones de la compra">
+              </td>
+            </tr>
+          </table>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn btn-danger btn-sm" data-bs-dismiss="modal" id="btnCancelarRegistroStock"
+          style="border-radius: 50rem;">Cancelar</a>
+        <a class="btn btn-primary btn-sm" id="btnGuardarNuevorStock" style="border-radius: 50rem;">Guardar</a>
+      </div>
+
+    </div>
+  </div>
 </div>
+
+
 <!-- /. End -->
+
+
 
 <script>
 var accion;
@@ -557,6 +693,14 @@ $(document).ready(function() {
   // LIMPIAR INPUT DE INGRESO DE STOCK AL CERRAR LA VENTANA MODAL
   $("#btnCancelarRegistroStock, #btnCerrarModalStock").on('click', function() {
     $("#iptStockSumar").val("")
+    $("#iptPrecioCompra").val("")
+    $("#iptPrecioVenta").val("")
+    $("#iptPrecioFeria").val("")
+    $("#iptDocumento").val("")
+    $("#selProv").val("0")
+    $("#fechaRegistro").val("")
+    $("#iptObserva").val("")
+    $("#stock_NuevoStock").html("")
   })
 
   /*===================================================================*/
@@ -589,9 +733,9 @@ $(document).ready(function() {
     fnc_ModalAumentarStock($("#tbl_inventario").DataTable().row($(this).parents('tr')).data());
   })
 
-  $('#tbl_inventario tbody').on('click', '.btnDisminuirStock', function() {
-    fnc_ModalDisminuirStock($("#tbl_inventario").DataTable().row($(this).parents('tr')).data());
-  })
+  // $('#tbl_inventario tbody').on('click', '.btnDisminuirStock', function() {
+  //   fnc_ModalDisminuirStock($("#tbl_inventario").DataTable().row($(this).parents('tr')).data());
+  // })
 
   // CALCULAR NUEVO STOCK (AUMENTAR O DISMINUIR)
   $("#iptStockSumar").keyup(function() {
@@ -720,20 +864,7 @@ function fnc_CargarDataTableInventario() {
           }
         }
       },
-      // {
-      //   targets: 4,
-      //   createdCell: function(td, cellData, rowData, row, col) {
-      //     if (rowData['imagen'] != 'no_image.jpg') {
-      //       $(td).html('<img src="vistas/assets/imagenes/productos/' + rowData['imagen'] +
-      //         '" class="rounded-pill border text-center border-secondary zoom" style="object-fit: cover; width: 40px; height: 40px; transition: transform .2s;" alt="">'
-      //         )
-      //     } else {
-      //       $(td).html(
-      //         '<img src="vistas/assets/imagenes/no_image.jpg" class="rounded-pill border text-center border-secondary" style="object-fit: cover; width: 40px; height: 40px;" alt="">'
-      //         )
-      //     }
-      //   }
-      // },
+
       {
         targets: 1,
         orderable: false,
@@ -742,13 +873,13 @@ function fnc_CargarDataTableInventario() {
             "<i class='fas fa-pencil-alt fs-5'></i>" +
             "</span>")
 
-          if (parseInt(rowData['costo_unitario']) > 0) {
-            $(td).append("<span class='btnAumentarStock text-success px-1' style='cursor:pointer;'>" +
-              "<i class='fas fa-plus-circle fs-5'></i>" +
-              "</span>" +
-              "<span class='btnDisminuirStock text-warning px-1' style='cursor:pointer;'>" +
-              "<i class='fas fa-minus-circle fs-5'></i>" +
-              "</span>");
+          // Mostrar botón Aumentar solo si el producto está ACTIVO; quitar botón Disminuir
+          var btnAumentar = "<span class='btnAumentarStock text-warning px-1' style='cursor:pointer;' title='Aumentar Stock'><i class='fas fa-plus-circle fs-5'></i></span>";
+
+          var productoActivo = (rowData['estado'] != 'INACTIVO');
+
+          if (productoActivo) {
+            $(td).append(btnAumentar);
           }
           if (rowData['estado'] == 'INACTIVO') {
 
@@ -827,26 +958,11 @@ function fnc_ModalActualizarProducto(fila_actualizar) {
   $("#id_unidad_medida").val(data[16]);
   $("#id_proveedor").val(data[18]).change();
   
-  var formData = new FormData();
-  formData.append('accion', accion)
-  //formData.append('detalle_producto', $("#frm-datos-producto").serialize());
+  // var formData = new FormData();
+  // formData.append('accion', accion)
+  // response = SolicitudAjax('ajax/productos.ajax.php', 'POST', formData);
 
-  response = SolicitudAjax('ajax/productos.ajax.php', 'POST', formData);
-
-  // if (response) {
-  //   $("#impuesto").val(response['impuesto'] + ' %')
-  //   $("#impuesto_producto").val(response['impuesto']);
-  // }
-  // $("#id_unidad_medida").val(data['id_unidad_medida']).change();
-  // $("#previewImg").attr("src", 'vistas/assets/imagenes/productos/' + (data['imagen'] ? data['imagen'] :
-  // 'no_image.jpg'));
-  // $("#precio_unitario_con_igv").val(data['precio_unitario_con_igv']);
-  // $("#precio_unitario_sin_igv").val(data['precio_unitario_sin_igv']);
-  // $("#precio_unitario_mayor_con_igv").val(data['precio_unitario_mayor_con_igv']);
-  // $("#precio_unitario_mayor_sin_igv").val(data['precio_unitario_mayor_sin_igv']);
-  // $("#precio_unitario_oferta_con_igv").val(data['precio_unitario_oferta_con_igv']);
-  // $("#precio_unitario_oferta_sin_igv").val(data['precio_unitario_oferta_sin_igv']);
-  // $("#minimo_stock").val(data['minimo_stock']);
+ 
 }
 
 function fnc_registrarProducto() {
@@ -865,24 +981,6 @@ function fnc_registrarProducto() {
 
     if (form.checkValidity() === true) {
 
-      // var file = $("#imagen").val();
-
-      // if (file) {
-
-      //   var ext = file.substring(file.lastIndexOf("."));
-
-      //   if (ext != ".jpg" && ext != ".png" && ext != ".gif" && ext != ".jpeg" && ext != ".webp") {
-      //     mensajeToast('error', "La extensión " + ext + " no es una imagen válida");
-      //     imagen_valida = false;
-      //   }
-
-      //   if (!imagen_valida) {
-      //     return;
-      //   }
-
-      //   const inputImage = document.querySelector('#imagen');
-      //   formData.append('archivo[]', inputImage.files[0])
-      // }
 
       Swal.fire({
         title: 'Está seguro de registrar el producto?',
@@ -1036,75 +1134,97 @@ function fnc_ModalAumentarStock(data) {
   $("#titulo_modal_label").html('Agregar al Stock'); // CAMBIAR EL TEXTO DEL LABEL DEL INPUT PARA INGRESO DE STOCK
   $("#iptStockSumar").attr("placeholder", "Ingrese cantidad a agregar al Stock"); //CAMBIAR EL PLACEHOLDER 
 
-  $("#stock_codigoProducto").html(data['codigo_producto']) //CODIGO DEL PRODUCTO DEL DATATABLE
-  $("#stock_Producto").html(data['producto']) //NOMBRE DEL PRODUCTO DEL DATATABLE
-  $("#stock_Stock").html(data['stock']) //STOCK ACTUAL DEL PRODUCTO DEL DATATABLE
+  // Los datos vienen como array: [0=control, 1=opciones, 2=id, 3=codigo, 4=descripcion, ..., 7=stock, 8=precio_compra, ...]
+  var idProducto = data[2] || '';           // id del producto
+  var codigo = data[3] || '';               // codigo_producto
+  var producto = data[4] || '';             // descripcion/producto
+  var stock = data[7] || 0;                 // stock actual
+  var precioCompra = data[8] || 0;          // precio de compra
 
-  $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-}
+  $("#stock_idProducto").html(idProducto);
+  $("#stock_codigoProducto").html(codigo);
+  $("#stock_Producto").html(producto);
+  $("#stock_precioProducto").html(precioCompra);
+  $("#stock_Stock").html(stock);
 
-function fnc_ModalDisminuirStock(data) {
-
-  operacion_stock = 'disminuir_stock'; //restar stock
-  accion = 3;
-  $("#mdlGestionarStock").modal('show'); //MOSTRAR VENTANA MODAL
-
-  $("#titulo_modal_stock").html('Disminuir Stock'); // CAMBIAR EL TITULO DE LA VENTANA MODAL
-  $("#titulo_modal_label").html('Disminuir al Stock'); // CAMBIAR EL TEXTO DEL LABEL DEL INPUT PARA INGRESO DE STOCK
-  $("#iptStockSumar").attr("placeholder", "Ingrese cantidad a disminuir al Stock"); //CAMBIAR EL PLACEHOLDER 
-
-  $("#stock_codigoProducto").html(data['codigo_producto']) //CODIGO DEL PRODUCTO DEL DATATABLE
-  $("#stock_Producto").html(data['producto']) //NOMBRE DEL PRODUCTO DEL DATATABLE
-  $("#stock_Stock").html(data['stock']) //STOCK ACTUAL DEL PRODUCTO DEL DATATABLE
-
-  $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+  $("#iptPrecioCompra").val(precioCompra);  // Rellenar precio de compra en el input
+  $("#stock_NuevoStock").html(parseFloat(stock));
 
 }
+
 
 function fnc_CalcularNuevoStock() {
-  if (operacion_stock == 'aumentar_stock') {
 
-    if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
-
-      var stockActual = parseFloat($("#stock_Stock").html());
-      var cantidadAgregar = parseFloat($("#iptStockSumar").val());
-
-      $("#stock_NuevoStock").html(stockActual + cantidadAgregar);
-
-    } else {
-
-      mensajeToast('error', 'Ingrese un valor mayor a 0');
-
-      $("#iptStockSumar").val("")
-      $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-
-    }
-
-  } else {
-
-    if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
-
-      var stockActual = parseFloat($("#stock_Stock").html());
-      var cantidadAgregar = parseFloat($("#iptStockSumar").val());
-
-      $("#stock_NuevoStock").html(stockActual - cantidadAgregar);
-
-      if (parseInt($("#stock_NuevoStock").html()) < 0) {
-
-        mensajeToast('error', 'La cantidad a disminuir no puede ser mayor al stock actual (Nuevo stock < 0)');
-
-        $("#iptStockSumar").val("");
-        $("#iptStockSumar").focus();
-        $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-      }
-    } else {
-
-      mensajeToast('error', 'Ingrese un valor mayor a 0');
-
-      $("#iptStockSumar").val("")
-      $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-    }
+  var stockActual = parseFloat($("#stock_Stock").html()) || 0;
+  var cantidadIngresada = parseFloat($("#iptStockSumar").val()) || 0;
+  
+  if (cantidadIngresada <= 0) {
+    mensajeToast('error', 'Ingrese un valor mayor a 0');
+    $("#iptStockSumar").val("");
+    $("#stock_NuevoStock").html(stockActual);
+    return;
   }
+
+  if (operacion_stock == 'aumentar_stock') {
+    // Sumar al stock actual
+    var nuevoStock = stockActual + cantidadIngresada;
+    $("#stock_NuevoStock").html(nuevoStock.toFixed(2));
+  } else if (operacion_stock == 'disminuir_stock') {
+    // Restar del stock actual
+    var nuevoStock = stockActual - cantidadIngresada;
+    
+    if (nuevoStock < 0) {
+      mensajeToast('error', 'La cantidad a disminuir no puede ser mayor al stock actual');
+      $("#iptStockSumar").val("");
+      $("#stock_NuevoStock").html(stockActual);
+      return;
+    }
+    
+    $("#stock_NuevoStock").html(nuevoStock.toFixed(2));
+  }
+  // if (operacion_stock == 'aumentar_stock') {
+
+  //   if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+  //     var stockActual = parseFloat($("#stock_Stock").html());
+  //     var cantidadAgregar = parseFloat($("#iptStockSumar").val());
+
+  //     $("#stock_NuevoStock").html(stockActual + cantidadAgregar);
+
+  //   } else {
+
+  //     mensajeToast('error', 'Ingrese un valor mayor a 0');
+
+  //     $("#iptStockSumar").val("")
+  //     $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+
+  //   }
+
+  // } else {
+
+  //   if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+  //     var stockActual = parseFloat($("#stock_Stock").html());
+  //     var cantidadAgregar = parseFloat($("#iptStockSumar").val());
+
+  //     $("#stock_NuevoStock").html(stockActual - cantidadAgregar);
+
+  //     if (parseInt($("#stock_NuevoStock").html()) < 0) {
+
+  //       mensajeToast('error', 'La cantidad a disminuir no puede ser mayor al stock actual (Nuevo stock < 0)');
+
+  //       $("#iptStockSumar").val("");
+  //       $("#iptStockSumar").focus();
+  //       $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+  //     }
+  //   } else {
+
+  //     mensajeToast('error', 'Ingrese un valor mayor a 0');
+
+  //     $("#iptStockSumar").val("")
+  //     $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+  //   }
+  // }
 }
 
 // CALCULA LA UTILIDAD
@@ -1118,36 +1238,89 @@ function calcularUtilidad() {
 
 function fnc_ActualizarStock() {
 
-  if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
-
-    var nuevoStock = parseFloat($("#stock_NuevoStock").html()),
-      codigo_producto = $("#stock_codigoProducto").html();
-
-    var datos = new FormData();
-
-    datos.append('accion', 'aumentar_disminuir_stock');
-    datos.append('nuevoStock', nuevoStock);
-    datos.append('codigo_producto', codigo_producto);
-    datos.append('tipo_movimiento', operacion_stock);
-
-    //Solicitud para verificar el Stock del Producto
-    response = SolicitudAjax("ajax/productos_inventario.ajax.php", "POST", datos);
-
-    if (response["tipo_msj"] == "success") {
-      $("#stock_NuevoStock").html("");
-      $("#iptStockSumar").val("");
-
-      $("#mdlGestionarStock").modal('hide');
-
-      $("#tbl_inventario").DataTable().ajax.reload();
-      mensajeToast(response["tipo_msj"], response["msj"])
-    }
-
-
-  } else {
-    mensajeToast('error', 'Debe ingresar la cantidad a aumentar');
+  if ($("#iptStockSumar").val() == "" || $("#iptStockSumar").val() <= 0) {
+    mensajeToast('error', 'Debe ingresar la cantidad a aumentar/disminuir');
     return false;
   }
+
+  var nuevoStock = parseFloat($("#stock_NuevoStock").html()), codigo_producto = $("#stock_codigoProducto").html();
+  let precioCompra = $("#iptPrecioCompra").val();
+  let precioVenta = $("#iptPrecioVenta").val();
+  let documentoCompra = $("#iptDocumento").val();
+  let idProveedor = $("#selProv").val();
+  let fechaRegistro = $("#fechaRegistro").val();
+  let observaCompra = $("#iptObserva").val();
+  let cantidadCompra = $("#iptStockSumar").val();
+
+  console.log('Actualizando stock - Código:', codigo_producto, 'Nuevo Stock:', nuevoStock, 'Operación:', operacion_stock);
+
+  var datos = new FormData();
+  datos.append('accion', 'aumentar_disminuir_stock');
+  datos.append('nuevoStock', nuevoStock);
+  datos.append('codigo_producto', codigo_producto);
+  datos.append('tipo_movimiento', 'aumentar_stock');
+  datos.append('precioCompra', precioCompra);
+  datos.append('precioVenta', precioVenta);
+  datos.append('documentoCompra', documentoCompra);
+  datos.append('idProveedor', idProveedor);
+  datos.append('fechaRegistro', fechaRegistro);
+  datos.append('observaCompra', observaCompra);
+  datos.append('cantidadCompra', cantidadCompra);
+
+  //Solicitud para actualizar el Stock del Producto
+  response = SolicitudAjax("ajax/productos_inventario.ajax.php", "POST", datos);
+
+  console.log('Respuesta del servidor rarm:', response);
+
+  if (response["tipo_msj"] == "success") {
+
+    $("#stock_NuevoStock").html("");
+    $("#iptStockSumar").val("");
+
+    $("#iptPrecioCompra").val("");
+    $("#iptPrecioVenta").val("");
+    $("#iptDocumento").val("");
+    $("#selProv").val("");
+    $("#fechaRegistro").val("");
+    $("#iptObserva").val("");
+
+    $("#mdlGestionarStock").modal('hide');
+    $("#tbl_inventario").DataTable().ajax.reload();
+    mensajeToast(response["tipo_msj"], response["msj"]);
+  } else {
+    mensajeToast(response["tipo_msj"], response["msj"]);
+  }
+
+  // if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+  //   var nuevoStock = parseFloat($("#stock_NuevoStock").html()),
+  //     codigo_producto = $("#stock_codigoProducto").html();
+
+  //   var datos = new FormData();
+
+  //   datos.append('accion', 'aumentar_disminuir_stock');
+  //   datos.append('nuevoStock', nuevoStock);
+  //   datos.append('codigo_producto', codigo_producto);
+  //   datos.append('tipo_movimiento', operacion_stock);
+
+  //   //Solicitud para verificar el Stock del Producto
+  //   response = SolicitudAjax("ajax/productos_inventario.ajax.php", "POST", datos);
+
+  //   if (response["tipo_msj"] == "success") {
+  //     $("#stock_NuevoStock").html("");
+  //     $("#iptStockSumar").val("");
+
+  //     $("#mdlGestionarStock").modal('hide');
+
+  //     $("#tbl_inventario").DataTable().ajax.reload();
+  //     mensajeToast(response["tipo_msj"], response["msj"])
+  //   }
+
+
+  // } else {
+  //   mensajeToast('error', 'Debe ingresar la cantidad a aumentar');
+  //   return false;
+  // }
 }
 
 

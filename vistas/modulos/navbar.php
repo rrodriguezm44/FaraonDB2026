@@ -19,8 +19,8 @@
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a style="cursor: pointer;" class="nav-link active"
-          onclick="CargarContenido('content-wrapper','vistas/carga_productos.php')">
-          Carga Productos
+          onclick="CargarContenido('content-wrapper','vistas/adquisiciones.php')">
+          Adquisiciones
         </a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">

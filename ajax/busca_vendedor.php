@@ -30,7 +30,7 @@ if ($numero_reg == 0) {
 
 
 
-    $html .= "<option value='" . $row1['id_usuario'] . "'>" . $row1['nombre_usuario'] . " " . $row1['apellido_usuario'] . "</option>";
+    $html .= "<option value='" . $row1['id_usuario'] . "'>" . $row1['nombre_usuario'] . " " . $row1['apellido_usuario'] . " | " . $row1['telefono'] . "</option>";
   }
 
   echo $html;
