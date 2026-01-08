@@ -193,7 +193,7 @@ if (isset($_SESSION['usuario'])) {
                   <th>Producto</th>
                   <th>Cantidad</th>
                   <th>Cantidad Temp</th>
-                  <th>Precio Vta.</th>
+                  <th>Precio Venta</th>
                   <th>Precio Vta. Temp</th>
                   <th>Descuento</th>
                   <th>Descuento Temp</th>
@@ -306,7 +306,7 @@ MODAL LISTADO DE PRODUCTOS
       <!-- cabecera del modal -->
       <div class="modal-header bg-gray py-1">
 
-        <h5 class="modal-title">Listado de Productos | Vender</h5>
+        <h5 class="modal-title">Listado de Productos | Seleccionar</h5>
 
         <button type="button" class="btn btn-danger text-white border-0 fs-5" data-bs-dismiss="modal">
           <i class="far fa-times-circle"></i>
@@ -365,8 +365,8 @@ MODAL LISTADO DE PRODUCTOS
   var itemProducto = 1;
   $(document).ready(function() {
 
-    fnc_CargarDataTableListadoProductos();
-    fnc_CargarDataTableProductos();
+    fnc_CargarDataTableListadoProductos(); //listado de productos elegidos
+    fnc_CargarDataTableProductos(); //productos por elegir
 
     // $('#selCliente').select2({ width : 'resolve'}); // es necesario anular el valor predeterminado modificado 
 
@@ -507,7 +507,7 @@ MODAL LISTADO DE PRODUCTOS
       if ($("#chkEfectivoExacto").is(':checked')) {
 
         var vuelto = 0;
-        var totalVenta = $("#resumen_total_venta").html();
+        var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
 
         $("#iptEfectivoRecibido").val(totalVenta);
 
@@ -676,7 +676,7 @@ MODAL LISTADO DE PRODUCTOS
   /*===================================================================*/
   function actualizarVuelto() {
 
-    var totalVenta = $("#resumen_total_venta").html();
+    var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
 
     $("#chkEfectivoExacto").prop('checked', false);
 
@@ -925,9 +925,9 @@ MODAL LISTADO DE PRODUCTOS
 
     })
 
-    $("#resumen_subtotal").html('Bs. ' + $total_subtotal.toFixed(2));
-    $("#resumen_total_descuento").html('Bs. ' + $total_descuento.toFixed(2));
-    $("#resumen_total_venta").html($total_compra.toFixed(2));
+    $("#resumen_subtotal").html('Bs. ' + parseFloat($total_subtotal).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $("#resumen_total_descuento").html('Bs. ' + parseFloat($total_descuento).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $("#resumen_total_venta").html(parseFloat($total_compra).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
 
   }
 
@@ -937,7 +937,7 @@ MODAL LISTADO DE PRODUCTOS
   }
 
   /*==========================================================================================================================================
-G U A R D A R   C O M P R A
+G U A R D A R   VENTA ADQUSICION
 *=========================================================================================================================================*/
   function fnc_GuardarCompra() {
 
@@ -1007,8 +1007,8 @@ G U A R D A R   C O M P R A
         //$ope_exoneradas = $("#resumen_opes_exoneradas").html().replace('S/ ', '').trim();
         //$ope_inafectas = $("#resumen_opes_inafectas").html().replace('S/ ', '').trim();
         //$total_igv = $("#resumen_total_igv").html().replace('S/ ', '').trim();
-        $total_descuento = $("#resumen_total_descuento").html().replace('Bs. ', '').trim();
-        $total = $("#resumen_total_venta").html().replace('Bs. ', '').trim();
+        $total_descuento = $("#resumen_total_descuento").html().replace('Bs. ', '').trim().replace(',', '.');
+        $total = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
 
         var formData = new FormData();
         if ($("#id_compra").val() > 0) formData.append('accion', 'actualizar_compra');
@@ -1020,14 +1020,26 @@ G U A R D A R   C O M P R A
         formData.append('total_descuento', $total_descuento);
         formData.append('total', $total);
 
+        console.log("Enviando datos a compras.ajax.php:", {
+          action: formData.get('accion'),
+          id_compra: formData.get('id_compra'),
+          total_descuento: formData.get('total_descuento'),
+          total: formData.get('total')
+        });
+        
         response = SolicitudAjax('ajax/compras.ajax.php', 'POST', formData);
+        
+        console.log("Respuesta recibida:", response);
+        
         // Protección: si la respuesta no existe o no tiene el formato esperado
         if (typeof response === 'undefined' || response === null) {
-          console.error('SolicitudAjax returned undefined or null', response);
+          console.error('SolicitudAjax returned undefined or null');
+          console.error('FormData enviado:', Array.from(formData.entries()));
           Swal.fire({
             position: 'top',
             icon: 'error',
-            title: 'Error en la solicitud. Revise la consola para más detalles.',
+            title: 'Error en la solicitud. No se recibió respuesta del servidor.',
+            text: 'Revise la consola para más detalles.',
             showConfirmButton: true
           });
           return;
@@ -1044,8 +1056,36 @@ G U A R D A R   C O M P R A
           showConfirmButton: true
         })
 
+        var nro_boleta = $("#iptNroVenta").val();
 
-        if (response.tipo_msj == "success") fnc_LimpiarFomulario();
+        if (response.tipo_msj == "success") {
+          
+           //consulta para imprimir la boleta
+           Swal.fire({
+
+            title: 'Decea IMPRIMIR la nota de Venta?',
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, deceo imprimir!',
+            cancelButtonText: 'No, deceo imprimir por ahora!',
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+                           
+                  window.open("http://localhost/faraonbd//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
+                
+             
+            }
+          })
+
+          fnc_LimpiarFomulario();
+
+          CargarNroBoleta();
+
+
+        }
 
       }
 

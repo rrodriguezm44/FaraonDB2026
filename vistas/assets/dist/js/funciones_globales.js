@@ -57,6 +57,25 @@ function SolicitudAjax(url_ajax, type_ajax, formData) {
         dataType: 'json',
         success: function (respuesta) {
             response = respuesta;
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en SolicitudAjax:", {
+                url: url_ajax,
+                status: xhr.status,
+                statusText: xhr.statusText,
+                responseText: xhr.responseText,
+                error: error
+            });
+            
+            // Retornar un objeto de error para que el código pueda manejarlo
+            response = {
+                tipo_msj: "error",
+                msj: "Error en la solicitud: " + (xhr.responseText || error || "Error desconocido"),
+                error_details: {
+                    status: xhr.status,
+                    statusText: xhr.statusText
+                }
+            };
         }
     });
 
