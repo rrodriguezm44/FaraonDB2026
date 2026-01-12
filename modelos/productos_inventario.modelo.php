@@ -381,11 +381,6 @@ class ProductosModelo
     static public function mdlActualizarProducto($array_datos_producto, $imagen = null)
     {
 
-        // $stmt = Conexion::conectar()->prepare("select imagen from productos where codigo_producto = :codigo_producto");
-        // $stmt->bindParam(":codigo_producto", $array_datos_producto["codigo_producto"], PDO::PARAM_STR);
-        // $stmt->execute();
-
-        // $imagen_actual = $stmt->fetch()[0];
 
         try {
 
@@ -431,11 +426,20 @@ class ProductosModelo
 
             $dbh->commit();
 
-            //GUARDAMOS LA IMAGEN EN LA CARPETA
-            // if ($imagen) {
-            //     $guardarImagen = new ProductosModelo();
-            //     $guardarImagen->guardarImagen($imagen["folder"], $imagen["ubicacionTemporal"], $imagen["nuevoNombre"]);
-            // }
+            //$concepto = 'MODIFICA_STOCK';
+
+            $costo_total_producto = $array_datos_producto["precio_compra"] * $array_datos_producto["stock_producto"];
+            //REGISTRAMOS KARDEX - INVENTARIO INICIAL
+            $stmt = $dbh->prepare("call prc_actualizar_stock_y_kardex(?,?,?);");
+
+            $dbh->beginTransaction();
+            $stmt->execute(array(
+                $array_datos_producto["codigo_producto"],
+                $array_datos_producto["stock_producto"],
+                $array_datos_producto["precio_venta"]
+            ));
+
+           $dbh->commit();
 
 
             $respuesta["tipo_msj"] = "success";
