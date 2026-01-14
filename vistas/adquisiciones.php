@@ -771,7 +771,7 @@ MODAL LISTADO DE PRODUCTOS
       }
     });
 
-    ajustarHeadersDataTables($("#tbl_ListadoProductos"))
+    //ajustarHeadersDataTables($("#tbl_ListadoProductos"))
   }
 
   function CargarProductos(producto = "") {
@@ -825,8 +825,9 @@ MODAL LISTADO DE PRODUCTOS
             'precio_venta_temp': respuesta['precio_venta'],
             'descuento': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
               respuesta['codigo_producto'] +
-              '" class="form-control text-center iptDescuento p-0 m-0 px-2" value="0">',
-            'descuento_temp': 0,
+              '" class="form-control text-center iptDescuento p-0 m-0 px-2" value="' +
+              respuesta['descuento'] + '">',
+            'descuento_temp': respuesta['descuento'],
             'subTotal': 0,
             'total': 0
 
@@ -839,8 +840,6 @@ MODAL LISTADO DE PRODUCTOS
         } else {
           mensajeToast('error', 'EL PRODUCTO NO EXISTE O NO TIENE STOCK');
         }
-
-
 
       }
     });
@@ -913,11 +912,12 @@ MODAL LISTADO DE PRODUCTOS
       $descuento = $('#tbl_ListadoProductos').DataTable().cell(index, 8).data()
 
       $subtotal = ($precio_venta * $cantidad);
-      $total = $subtotal - $descuento;
+      $descuentoPor = ($precio_venta * $descuento) / 100;
+      $total = $subtotal - $descuentoPor;
 
       $total_subtotal = $total_subtotal + $subtotal;
       $total_compra = $total_compra + $total;
-      $total_descuento = $total_descuento + parseFloat($descuento)
+      $total_descuento = $total_descuento + parseFloat($descuentoPor)
       console.log("🚀 ~ file: compras.php:1495 ~ $ ~ $total_descuento:", $total_descuento)
 
       $('#tbl_ListadoProductos').DataTable().cell(index, 9).data(parseFloat($subtotal).toFixed(2))
@@ -971,8 +971,8 @@ G U A R D A R   VENTA ADQUSICION
       var data = row.data();
 
 
-      if (data['cantidad_temp'] == 0 || data["costo_unitario_temp"] == 0 || data['cantidad_temp'] == '' ||
-        data["costo_unitario_temp"] == '') {
+      if (data['cantidad_temp'] == 0 || data["precio_venta_temp"] == 0 || data['cantidad_temp'] == '' ||
+        data["precio_venta_temp"] == '') {
         valores_en_cero = 1;
         // exit;
       }

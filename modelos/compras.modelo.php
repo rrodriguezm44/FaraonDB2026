@@ -225,13 +225,15 @@ class ComprasModelo
                                                                     cantidad, 
                                                                     total_producto, 
                                                                     precio, 
-                                                                    venta_id) 
+                                                                    venta_id,
+                                                                    descuento_porcentual) 
                                         VALUES(:nro_boleta,
                                                 :codigo_producto,
                                                 :cantidad,
                                                 :total_venta,
                                                 :precio,
-                                                :id_venta)");
+                                                :id_venta,
+                                                :descuento_porcentual)");
                 $dbh->beginTransaction();
                 $stmt->execute(array(
                     ':nro_boleta' => $nro_boletaDetalle,
@@ -239,7 +241,8 @@ class ComprasModelo
                     ':cantidad' => $detalle_compra[$i]->cantidad_temp,
                     ':total_venta' => $detalle_compra[$i]->total,
                     ':precio' => $detalle_compra[$i]->precio_venta_temp,
-                    ':id_venta' => $id_venta_inserted
+                    ':id_venta' => $id_venta_inserted,
+                    ':descuento_porcentual' => $detalle_compra[$i]->descuento_temp
                 ));
 
                 $dbh->commit();

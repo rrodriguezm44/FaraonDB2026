@@ -638,7 +638,8 @@ class ProductosModelo
                                                         p.unidad_medida, 
                                                         p.precio_venta, 
                                                         p.stock,         
-                                                        p.costo_total
+                                                        p.costo_total,
+                                                        p.descuento
                                                 FROM productos p
                                                 WHERE codigo_producto = :codigoProducto");
 
