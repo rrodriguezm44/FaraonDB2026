@@ -132,7 +132,8 @@
         $("#totalProductos").html(response[0]['totalProductos']);
         $("#totalOfertas").html(response[0]['totalOfertas']);
         $("#totalClientes").html(response[0]['totalClientes']);
-        $("#totalVentas").html('Bs. ' + response[0]['totalVentas'].replace(/\d(?=(\d{3})+\.)/g, "$&,"));
+        //$("#totalVentas").html('Bs. ' + response[0]['totalVentas'].replace(/\d(?=(\d{3})+\.)/g, "$&,"));
+        $("#totalVentas").html(response[0]['totalVentas']);
       }
     });
 
