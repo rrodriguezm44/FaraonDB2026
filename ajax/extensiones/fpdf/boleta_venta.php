@@ -25,10 +25,7 @@ $dia = $dias[(date('N', strtotime($fila["fecha_entrega"]))) - 1];
 
 $fecha = date("d/m/Y", strtotime($fila["fecha_venta"]));
 $fecha_entrega = $dia . ', ' . date("d/m/Y", strtotime($fila["fecha_entrega"]));
-//$productos = json_decode($fila["productos"], true);
-//$neto = number_format($fila["neto"], 2);
-//$impuesto = number_format($fila["impuesto"], 2);
-//$total = number_format($fila["total"], 2);
+
 if ($fila["docuVenta"] == 1) {
   $tipodoc = 'CN';
 } else {

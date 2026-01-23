@@ -162,7 +162,8 @@ class VentasModelo
                                             v.fecha_venta
                                             FROM detalle_ventas dv 
                                             inner join productos p on dv.codigo_producto = p.codigo_producto
-                                            inner join ventas v on cast(v.nro_boleta as integer) = cast(dv.nro_boleta as integer)
+                                            -- inner join ventas v on cast(v.nro_boleta as integer) = cast(dv.nro_boleta as integer)
+                                            inner join ventas v on v.nro_boleta = dv.nro_boleta
                                             inner join categorias c on c.categoria_id = p.categoria_id
                                       where DATE(v.fecha_venta) >= date(:fechaDesde) and DATE(v.fecha_venta) <= date(:fechaHasta)
                                       order by dv.nro_boleta desc");

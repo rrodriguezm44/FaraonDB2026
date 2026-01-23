@@ -17,7 +17,8 @@ $menuUsuario = UsuarioModelo::mdlObtenerMenuUsuario($_SESSION["usuario"]->id_usu
   <div class="sidebar">
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="vistas/assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+        <!-- <img src="vistas/assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image"> -->
+        <img src="vistas/assets/dist/img/tigre_uno.png" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
         <h6 class="text-warning">

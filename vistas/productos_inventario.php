@@ -190,8 +190,9 @@ VENTA MODAL PARA REGISTRAR O ACTUALIZAR UN PRODUCTO
               <div class="form-floating mb-2">
 
                 <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="id_subcategoria"
-                  name="id_subcategoria" aria-label="Floating label select example" required>
+                  name="id_subcategoria" required>
                 </select>
+
                 <label for="id_subcategoria"><i class="fas fa-clone fs-6"></i><span class="small">
                     Sub-Categoria</span><span class="text-danger">*</span></label>
 
@@ -1182,49 +1183,7 @@ function fnc_CalcularNuevoStock() {
     
     $("#stock_NuevoStock").html(nuevoStock.toFixed(2));
   }
-  // if (operacion_stock == 'aumentar_stock') {
-
-  //   if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
-
-  //     var stockActual = parseFloat($("#stock_Stock").html());
-  //     var cantidadAgregar = parseFloat($("#iptStockSumar").val());
-
-  //     $("#stock_NuevoStock").html(stockActual + cantidadAgregar);
-
-  //   } else {
-
-  //     mensajeToast('error', 'Ingrese un valor mayor a 0');
-
-  //     $("#iptStockSumar").val("")
-  //     $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-
-  //   }
-
-  // } else {
-
-  //   if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
-
-  //     var stockActual = parseFloat($("#stock_Stock").html());
-  //     var cantidadAgregar = parseFloat($("#iptStockSumar").val());
-
-  //     $("#stock_NuevoStock").html(stockActual - cantidadAgregar);
-
-  //     if (parseInt($("#stock_NuevoStock").html()) < 0) {
-
-  //       mensajeToast('error', 'La cantidad a disminuir no puede ser mayor al stock actual (Nuevo stock < 0)');
-
-  //       $("#iptStockSumar").val("");
-  //       $("#iptStockSumar").focus();
-  //       $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-  //     }
-  //   } else {
-
-  //     mensajeToast('error', 'Ingrese un valor mayor a 0');
-
-  //     $("#iptStockSumar").val("")
-  //     $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
-  //   }
-  // }
+  
 }
 
 // CALCULA LA UTILIDAD

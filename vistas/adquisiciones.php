@@ -990,7 +990,7 @@ G U A R D A R   VENTA ADQUSICION
     //FIN DE LAS VALIDACIONES
 
     Swal.fire({
-      title: 'Está seguro(a) de registrar la Venta?',
+      title: 'Está seguro(a) de registrar la Venta Actual?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
