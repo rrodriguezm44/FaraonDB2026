@@ -4,7 +4,12 @@ require_once "conexion.php";
 require "../fpdf/fpdf.php";
 
 //MOSTRARNDO INFORMACION DE LA BASE DE DATOS, VENTAS
-$codigo = $_REQUEST['codigo'];
+$codigo = isset($_REQUEST['codigo']) ? $_REQUEST['codigo'] : '';
+
+// Validar que el código no esté vacío
+if (empty($codigo)) {
+    die("Error: Código de venta no proporcionado.");
+}
 
 date_default_timezone_set("America/La_Paz");
 $fechaHoy = date("d/m/Y");
@@ -13,12 +18,20 @@ $fechaHoy = date("d/m/Y");
 $query = "SELECT * FROM empresa";
 $result = mysqli_query($connection, $query);
 $empr = mysqli_fetch_array($result);
-$fonos = $empr['telefonos'];
+$fonos = isset($empr['telefonos']) ? $empr['telefonos'] : '';
 
 //DATOS VENTA
-$query_ven = "SELECT * FROM ventas WHERE nro_boleta = $codigo";
-$result_ven = mysqli_query($connection, $query_ven);
+$query_ven = "SELECT * FROM ventas WHERE nro_boleta = ?";
+$stmt_ven = mysqli_prepare($connection, $query_ven);
+mysqli_stmt_bind_param($stmt_ven, "s", $codigo);
+mysqli_stmt_execute($stmt_ven);
+$result_ven = mysqli_stmt_get_result($stmt_ven);
 $fila = mysqli_fetch_array($result_ven);
+
+// Verificar si se encontró la venta
+if (!$fila) {
+    die("Error: No se encontró la venta con el código proporcionado.");
+}
 
 $dias = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
 $dia = $dias[(date('N', strtotime($fila["fecha_entrega"]))) - 1];
@@ -26,22 +39,16 @@ $dia = $dias[(date('N', strtotime($fila["fecha_entrega"]))) - 1];
 $fecha = date("d/m/Y", strtotime($fila["fecha_venta"]));
 $fecha_entrega = $dia . ', ' . date("d/m/Y", strtotime($fila["fecha_entrega"]));
 
-if ($fila["docuVenta"] == 1) {
-  $tipodoc = 'CN';
-} else {
-  $tipodoc = 'CF';
-}
+$tipodoc = ($fila["docuVenta"] == 1) ? 'CN' : 'CF';
 
 if ($fila["tipoPago"] == 1) {
   $fpago = 'Contado';
 } else if ($fila["tipoPago"] == 2) {
-
   $fpago = 'Credito';
 } else {
-
   $fpago = 'Transferencia';
 }
-$obs = $fila["observa_venta"];
+$obs = isset($fila["observa_venta"]) ? $fila["observa_venta"] : '';
 
 
 $idcliente = $fila["cliente_id"];
@@ -49,22 +56,38 @@ $idvendedor = $fila["vendedorID"];
 $idusuario = $fila["usuarioID"];
 
 //DATOS CLIENTE
-$query_cli = "SELECT * FROM clientes WHERE cliente_id = $idcliente";
-$result_cli = mysqli_query($connection, $query_cli);
+$query_cli = "SELECT * FROM clientes WHERE cliente_id = ?";
+$stmt_cli = mysqli_prepare($connection, $query_cli);
+mysqli_stmt_bind_param($stmt_cli, "i", $idcliente);
+mysqli_stmt_execute($stmt_cli);
+$result_cli = mysqli_stmt_get_result($stmt_cli);
 $datoc = mysqli_fetch_array($result_cli);
 
-$empresa = $datoc["nombre_empresa"];
-$nempresa = strlen($datoc["nombre_empresa"]);
-$nit = $datoc["nit"];
-$nombre = $datoc["nombre"];
-$telefono = $datoc["telefono"];
-$direccion = $datoc["direccion"];
-$zona = $datoc["zona"];
+// Verificar si se encontró el cliente
+if (!$datoc) {
+    die("Error: No se encontró el cliente.");
+}
+
+$empresa = isset($datoc["nombre_empresa"]) ? $datoc["nombre_empresa"] : '';
+$nempresa = strlen($empresa);
+$nit = isset($datoc["nit"]) ? $datoc["nit"] : '';
+$nombre = isset($datoc["nombre"]) ? $datoc["nombre"] : '';
+$telefono = isset($datoc["telefono"]) ? $datoc["telefono"] : '';
+$direccion = isset($datoc["direccion"]) ? $datoc["direccion"] : '';
+$zona = isset($datoc["zona"]) ? $datoc["zona"] : '';
 
 //DATOS VENDEDOR
-$query_ven = "SELECT * FROM usuarios WHERE id_usuario = $idvendedor";
-$result_ven = mysqli_query($connection, $query_ven);
-$datoven = mysqli_fetch_array($result_ven);
+$query_ven_usr = "SELECT * FROM usuarios WHERE id_usuario = ?";
+$stmt_ven_usr = mysqli_prepare($connection, $query_ven_usr);
+mysqli_stmt_bind_param($stmt_ven_usr, "i", $idvendedor);
+mysqli_stmt_execute($stmt_ven_usr);
+$result_ven_usr = mysqli_stmt_get_result($stmt_ven_usr);
+$datoven = mysqli_fetch_array($result_ven_usr);
+
+// Verificar si se encontró el vendedor
+if (!$datoven) {
+    die("Error: No se encontró el vendedor.");
+}
 
 
 $pdf = new FPDF("P", "mm", "Letter");
@@ -126,7 +149,7 @@ $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetXY(100, 40);
 $pdf->Cell(20, 5, utf8_decode('Vendedor:'), 0, 0, "L");
 $pdf->SetFont('Arial', '', 8);
-$pdf->Cell(30, 5, utf8_decode($datoven["nombre_usuario"]) . ' (' . $datoven["telefono"] . ')', 0, 1, "L");
+$pdf->Cell(30, 5, utf8_decode(isset($datoven["nombre_usuario"]) ? $datoven["nombre_usuario"] : '') . ' (' . (isset($datoven["telefono"]) ? $datoven["telefono"] : '') . ')', 0, 1, "L");
 
 // TITULOS DEL REPORTE
 
@@ -271,13 +294,22 @@ $pdf->Cell(100, 5, utf8_decode('ENTREGUE CONFORME'), 0, "C");
 $pdf->Cell(25, 5, utf8_decode('RECIBI CONFORME'), 0, 1, "C");
 
 //DATOS USUARIO
-$query_usu = "SELECT * FROM usuarios WHERE id_usuario = $idusuario";
-$result_usu = mysqli_query($connection, $query_usu);
+$query_usu = "SELECT * FROM usuarios WHERE id_usuario = ?";
+$stmt_usu = mysqli_prepare($connection, $query_usu);
+mysqli_stmt_bind_param($stmt_usu, "i", $idusuario);
+mysqli_stmt_execute($stmt_usu);
+$result_usu = mysqli_stmt_get_result($stmt_usu);
 $datousu = mysqli_fetch_array($result_usu);
+
+// Verificar si se encontró el usuario
+if (!$datousu) {
+    die("Error: No se encontró el usuario.");
+}
+
 $pdf->SetXY(106, 133);
 $pdf->MultiCell(105, 5, '', 0, "C");
 //$pdf->Ln(1);
-$pdf->Cell(70, 5, utf8_decode('ELABORADO POR: ') . $datousu['nombre_usuario'], 0, 0, "L");
+$pdf->Cell(70, 5, utf8_decode('ELABORADO POR: ') . (isset($datousu['nombre_usuario']) ? $datousu['nombre_usuario'] : ''), 0, 0, "L");
 $pdf->Cell(15, 5, "OBSERVACIONES: ", 0, 1, "L");
 $pdf->SetXY(105, 139);
 $pdf->MultiCell(90, 3, utf8_decode($obs), 0, "L");

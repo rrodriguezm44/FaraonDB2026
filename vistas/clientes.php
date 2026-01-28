@@ -33,7 +33,7 @@
               <th>Razon Social</th>
               <th>NIT</th>
               <th>Telefono</th>
-              <th>Direccion</th>
+              <th>Direccion/Zona</th>
               <th>Estado</th>
               <th>Cat.</th>
               <th>Opciones</th>
@@ -52,7 +52,7 @@
     <div class="col-md-3" id="divDatosClientes">
       <div class="card card-info card-outline shadow">
         <div class="card-header">
-          <h3 class="card-title"><i class="fas fa-edit"></i> Registro/Modificacion <span>Clientes</span></h3>
+          <h3 class="card-title"> Registro/Modificacion <br><span><i class="fas fa-edit"></i>Clientes</span></h3>
         </div>
         <div class="card-body">
           <form class="needs-validation" novalidate>
@@ -97,14 +97,14 @@
 
                   <label class="col-form-label" for="iptNombreEmpresa">
                     <i class="fas fa-user f-6"></i>
-                    <span class="small">Nombre de la Empresa</span><span class="text-danger">*</span>
+                    <span class="small">Nombre Cliente</span><span class="text-danger">*</span>
                   </label>
 
                   <input type="text" class="form-control form-control-sm" id="iptNombreEmpresa" name="iptNombreEmpresa"
                     placeholder="Ingrese Nombre de la Empresa" onKeyUp="javascript:this.value=this.value.toUpperCase();"
                     required>
 
-                  <div class="invalid-feedback">Debe ingresar la Nombre de la Empresa</div>
+                  <div class="invalid-feedback">Debe ingresar la Nombre del Cliente</div>
 
                 </div>
               </div>
