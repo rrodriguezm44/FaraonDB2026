@@ -112,12 +112,12 @@ $pdf->Image("../fpdf/images/logo_oficial.png", 10, 5, 35, 20);
 //DATOS DEL CLIENTE Y LA VENTA 
 $pdf->SetXY(10, 32);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(20, 5, utf8_decode('Razón Social:'), 0, 0, "L");
+$pdf->Cell(20, 5, utf8_decode('Cliente:'), 0, 0, "L");
 $pdf->SetFont('Arial', '', 8);
 $pdf->Cell(30, 5, utf8_decode($empresa), 0, 1, "L");
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetXY(10, 36);
-$pdf->Cell(20, 5, utf8_decode('Cliente:'), 0, 0, "L");
+$pdf->Cell(20, 5, utf8_decode('Razón Social:'), 0, 0, "L");
 $pdf->SetFont('Arial', '', 8);
 $pdf->Cell(30, 5, utf8_decode($nombre), 0, 1, "L");
 $pdf->SetFont('Arial', 'B', 8);

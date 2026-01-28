@@ -13,17 +13,13 @@ class ModeloClientes
                                             nit,
                                             telefono,
                                             direccion,
-                                            CASE
-                                              WHEN estado = 1 THEN 'Activo'
-                                              WHEN estado = 2 THEN 'desactivo'
-                                              ELSE 'Desconocido'
-                                            END as estado,
+                                            zona,
                                             categoria,
                                             '' as opciones,
                                             nombre,
                                             tipo_empresa,
                                             fecha_creacion
-                                          FROM clientes ORDER BY nombre_empresa");
+                                          FROM clientes ORDER BY nombre_empresa ASC");
     $stmt->execute();
 
     return $stmt->fetchAll();
@@ -45,7 +41,7 @@ class ModeloClientes
     return $resultado;
   }
 
-  static public function mdlGuardarCliente($accion, $idCliente, $razonSocial, $nombreEmpresa, $telefono, $direccion, $tipoEmpresa, $categoria)
+  static public function mdlGuardarCliente($accion, $idCliente, $razonSocial, $nombreEmpresa, $telefono, $direccion, $tipoEmpresa, $categoria, $nitEmpresa, $zona)
   {
 
     //$date = null;
@@ -54,8 +50,8 @@ class ModeloClientes
 
       $date = date("Y-m-d");
 
-      $stmt = Conexion::conectar()->prepare("INSERT INTO clientes (nombre,nombre_empresa,telefono,direccion,tipo_empresa,fecha_creacion,categoria) 
-                                                    VALUES (:razonSocial, :nombreEmpresa, :telefono, :direccion, :tipoEmpresa, :fechaRegistro, :categoria)");
+      $stmt = Conexion::conectar()->prepare("INSERT INTO clientes (nombre,nombre_empresa,telefono,direccion,tipo_empresa,fecha_creacion,categoria,nit,zona) 
+                                                    VALUES (:razonSocial, :nombreEmpresa, :telefono, :direccion, :tipoEmpresa, :fechaRegistro, :categoria, :nitEmpresa, :zona)");
 
       $stmt->bindParam(":razonSocial", $razonSocial, PDO::PARAM_STR);
       $stmt->bindParam(":nombreEmpresa", $nombreEmpresa, PDO::PARAM_STR);
@@ -64,6 +60,8 @@ class ModeloClientes
       $stmt->bindParam(":tipoEmpresa", $tipoEmpresa, PDO::PARAM_STR);
       $stmt->bindParam(":fechaRegistro", $date, PDO::PARAM_STR);
       $stmt->bindParam(":categoria", $categoria, PDO::PARAM_STR);
+      $stmt->bindParam(":nitEmpresa", $nitEmpresa, PDO::PARAM_STR);
+      $stmt->bindParam(":zona", $zona, PDO::PARAM_STR);
 
       if ($stmt->execute()) {
         $resultado = "Se registró el cliente correctamente. ";
@@ -77,9 +75,11 @@ class ModeloClientes
 
       $stmt = Conexion::conectar()->prepare("UPDATE clientes
                                             SET nombre = :razonSocial, 
-                                            nombre_empresa = :nombreEmpresa, 
+                                            nombre_empresa = :nombreEmpresa,
+                                            nit = :nitEmpresa,
                                             telefono = :telefono, 
                                             direccion = :direccion, 
+                                            zona = :zona,
                                             tipo_empresa = :tipoEmpresa, 
                                             fecha_creacion = :fechaRegistro,
                                             categoria = :categoria
@@ -93,6 +93,8 @@ class ModeloClientes
       $stmt->bindParam(":tipoEmpresa", $tipoEmpresa, PDO::PARAM_STR);
       $stmt->bindParam(":fechaRegistro", $date, PDO::PARAM_STR);
       $stmt->bindParam(":categoria", $categoria, PDO::PARAM_STR);
+      $stmt->bindParam(":nitEmpresa", $nitEmpresa, PDO::PARAM_STR);
+      $stmt->bindParam(":zona", $zona, PDO::PARAM_STR);
 
       if ($stmt->execute()) {
         $resultado = "Se actualizó el cliente correctamente. ";

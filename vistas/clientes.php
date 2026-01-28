@@ -29,17 +29,17 @@
         <div class="card-body">
           <table id="lstClientes" class="display nowrap table-striped w-100 shadow rounded">
             <thead class="bg-info text-left">
-              <th>id</th>
-              <th>Razon Social</th>
-              <th>NIT</th>
-              <th>Telefono</th>
-              <th>Direccion/Zona</th>
-              <th>Estado</th>
-              <th>Cat.</th>
-              <th>Opciones</th>
-              <th>Titular</th>
-              <th>Tipo</th>
-              <th>Fecha</th>
+              <th>id</th> <!--0 -->
+              <th>Razon Social</th> <!--1 -->
+              <th>NIT</th> <!-- 2 -->
+              <th>Telefono</th> <!--3 -->
+              <th>Direccion</th> <!--4 -->
+              <th>Zona</th> <!--5 --> 
+              <th>Cate.</th> <!--6 -->
+              <th>Opciones</th> <!--7 -->
+              <th>Titular</th> <!--8 -->
+              <th>Tipo</th> <!--9 -->
+              <th>Fecha</th> <!--10 -->
             </thead>
 
             <tbody class="small text left"></tbody>
@@ -95,6 +95,22 @@
               <div class="col-md-12">
                 <div class="form-group mb-2">
 
+                  <label class="col-form-label" for="iptNitEmpresa">
+                    <i class="fas fa-user f-6"></i>
+                    <span class="small">Nit Empresa</span><span class="text-danger">*</span>
+                  </label>
+
+                  <input type="text" class="form-control form-control-sm" id="iptNitEmpresa" name="iptNitEmpresa"
+                    placeholder="Ingrese Nit de la Empresa" required>
+
+                  <div class="invalid-feedback">Debe ingresar la Nit de la Empresa</div>
+
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group mb-2">
+
                   <label class="col-form-label" for="iptNombreEmpresa">
                     <i class="fas fa-user f-6"></i>
                     <span class="small">Nombre Cliente</span><span class="text-danger">*</span>
@@ -124,6 +140,7 @@
 
                 </div>
               </div>
+
               <div class="col-md-12">
                 <div class="form-group mb-2">
 
@@ -137,6 +154,23 @@
                     required>
 
                   <div class="invalid-feedback">Debe ingresar la Direccion</div>
+
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group mb-2">
+
+                  <label class="col-form-label" for="iptZona">
+                    <i class="fas fa-map-marker f-6"></i>
+                    <span class="small">Zona</span><span class="text-danger">*</span>
+                  </label>
+
+                  <input type="text" class="form-control form-control-sm" id="iptZona" name="iptZona"
+                    placeholder="Ingrese la Zona" onKeyUp="javascript:this.value=this.value.toUpperCase();"
+                    required>
+
+                  <div class="invalid-feedback">Debe ingresar la Zona</div>
 
                 </div>
               </div>
@@ -186,13 +220,6 @@
                 </a>
               </div>
             </div>
-            <div class="col-md-12">
-              <div class="form-group m-0 mb-2">
-                <a style="cursor:pointer;" class="btn btn-success btn-sm w-100" id="btnRegistrarDatosCliente">
-                  Datos Cliente
-                </a>
-              </div>
-            </div>
           </form>
 
         </div>
@@ -221,7 +248,7 @@
         {
           text: '<i class="fas fa-user-plus"></i> Nuevo Cliente',
           titleAttr: "Nuevo Cliente",
-          className: "btn btn-primary",
+          className: "btn btn-info",
           action: function() {
             $("#divDatosClientes").show();
           }
@@ -264,6 +291,10 @@
           targets: 3, // your case first column
           className: "text-center"
         },
+         {
+          targets: 6, // your case first column
+          className: "text-center"
+        },
         {
           targets: 8,
           visible: false
@@ -292,7 +323,7 @@
         }
       ],
       "order": [
-        [0, 'desc']
+        [0, 'asc']
       ],
       lengthMenu: [0, 5, 10, 15, 20, 50],
       "pageLength": 15,
@@ -334,9 +365,11 @@
         idCliente = 0;
 
         $("#iptRazonSocial").val("");
+        $("#iptNitEmpresa").val("");
         $("#iptNombreEmpresa").val("");
         $("#iptNumeroFono").val("");
         $("#iptDireccion").val("");
+        $("#iptZona").val("");
         $("#iptTipoEmpresa").val("");
         $("#iptFecha").val("");
         $("#iptSelCategoria").val("");
@@ -351,12 +384,14 @@
 
         idCliente = data[0];
         $("#iptRazonSocial").val(data[1]);
-        $("#iptNombreEmpresa").val(data[8]);
+        $("#iptNitEmpresa").val(data[2]);
         $("#iptNumeroFono").val(data[3]);
         $("#iptDireccion").val(data[4]);
+        $("#iptZona").val(data[5]);
+        $("#iptSelCategoria").val(data[6]);
+        $("#iptNombreEmpresa").val(data[8]);
         $("#iptTipoEmpresa").val(data[9]);
         $("#iptFecha").val(data[10]);
-        $("#iptSelCategoria").val(data[6]);
 
       }
 
@@ -409,8 +444,10 @@
 
           razonSocial = $("#iptRazonSocial").val();
           nombreEmpresa = $("#iptNombreEmpresa").val();
+          nitEmpresa = $("#iptNitEmpresa").val();
           telefono = $("#iptNumeroFono").val();
           direccion = $("#iptDireccion").val();
+          zona = $("#iptZona").val();
           tipoEmpresa = $("#iptTipoEmpresa").val();
           categoria = $("#iptSelCategoria").val();
           //fechaAct = date("Y-m-d");
@@ -424,6 +461,8 @@
           datos.append("direccion", direccion);
           datos.append("tipoEmpresa", tipoEmpresa);
           datos.append("categoria", categoria);
+          datos.append("nitEmpresa", nitEmpresa);
+          datos.append("zona", zona);
           //datos.append("fechaRegistro", fechaAct);
 
           Swal.fire({
@@ -457,8 +496,10 @@
 
                   $("#iptRazonSocial").val("");
                   $("#iptNombreEmpresa").val("");
+                  $("#iptNitEmpresa").val("");
                   $("#iptNumeroFono").val("");
                   $("#iptDireccion").val("");
+                  $("#iptZona").val("");
                   $("#iptTipoEmpresa").val("");
                   $("#iptFecha").val("");
                   $("#iptSelCategoria").val("");

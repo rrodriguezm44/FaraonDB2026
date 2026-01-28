@@ -12,6 +12,8 @@ class AjaxClientes
   public $direccion;
   public $tipoEmpresa;
   public $categoria;
+  public $nitEmpresa;
+  public $zona;
   public function ajaxListarClientes()
   {
 
@@ -31,7 +33,7 @@ class AjaxClientes
   public function ajaxGuardarCliente($accion)
   {
 
-    $guardarClientes = ClientesControlador::ctrGuardarCliente($accion, $this->idCliente, $this->razonSocial, $this->nombreEmpresa, $this->telefono, $this->direccion, $this->tipoEmpresa, $this->categoria);
+    $guardarClientes = ClientesControlador::ctrGuardarCliente($accion, $this->idCliente, $this->razonSocial, $this->nombreEmpresa, $this->telefono, $this->direccion, $this->tipoEmpresa, $this->categoria, $this->nitEmpresa, $this->zona);
 
     echo json_encode($guardarClientes, JSON_UNESCAPED_UNICODE);
   }
@@ -43,8 +45,10 @@ if (isset($_POST['idCliente']) && $_POST['idCliente'] > 0) { //EDITAR
   $editarCliente->idCliente = $_POST['idCliente'];
   $editarCliente->razonSocial = $_POST['razonSocial'];
   $editarCliente->nombreEmpresa = $_POST['nombreEmpresa'];
+  $editarCliente->nitEmpresa = $_POST['nitEmpresa'];
   $editarCliente->telefono = $_POST['telefono'];
   $editarCliente->direccion = $_POST['direccion'];
+  $editarCliente->zona = $_POST['zona'];
   $editarCliente->tipoEmpresa = $_POST['tipoEmpresa'];
   $editarCliente->categoria = $_POST['categoria'];
 
@@ -55,12 +59,16 @@ if (isset($_POST['idCliente']) && $_POST['idCliente'] > 0) { //EDITAR
   $registrarCliente->idCliente = $_POST['idCliente'];
   $registrarCliente->razonSocial = $_POST['razonSocial'];
   $registrarCliente->nombreEmpresa = $_POST['nombreEmpresa'];
+  $registrarCliente->nitEmpresa = $_POST['nitEmpresa'];
   $registrarCliente->telefono = $_POST['telefono'];
   $registrarCliente->direccion = $_POST['direccion'];
+  $registrarCliente->zona = $_POST['zona'];
   $registrarCliente->tipoEmpresa = $_POST['tipoEmpresa'];
   $registrarCliente->categoria = $_POST['categoria'];
 
   $registrarCliente->ajaxGuardarCliente(1);
+
+
 } else if (isset($_POST['accion']) && $_POST['accion'] == 2) { //borrar clientes
 
   $eliminarCliente = new AjaxClientes();
