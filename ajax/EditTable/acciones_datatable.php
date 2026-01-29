@@ -7,12 +7,14 @@ if ($_POST['action'] == 'edit') {
   $data = array(
     'codigo_producto' => $_POST['codigo_producto'],
     'cantidad' => $_POST['cantidad'],
+    'descuento_porcentual' => $_POST['descuento_porcentual'],
     'id' => $_POST['detalle_venta_id']
   );
 
-  $statement = Conexion::conectar()->prepare("Call prc_ActualizarDetalleVenta(:p_codigo_producto,:p_cantidad,:p_id)");
+  $statement = Conexion::conectar()->prepare("Call prc_ActualizarDetalleVenta(:p_codigo_producto,:p_cantidad,:descuento_porcentual,:p_id)");
   $statement->bindParam(":p_codigo_producto", $data["codigo_producto"], PDO::PARAM_STR);
   $statement->bindParam(":p_cantidad", $data["cantidad"], PDO::PARAM_STR);
+  $statement->bindParam(":descuento_porcentual", $data["descuento_porcentual"], PDO::PARAM_STR);
   $statement->bindParam(":p_id", $data["id"], PDO::PARAM_INT);
 
   $statement->execute();

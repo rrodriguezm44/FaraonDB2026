@@ -8,6 +8,7 @@ $query = "SELECT dv.detalle_venta_id,
                 c.nombre as nombre_categoria,
                 p.nombre as descripcion_producto,
                 dv.cantidad as cantidad,                            
+                dv.descuento_porcentual as descuento_porcentual,                            
                 round(dv.total_producto,2) as total_venta 
                 FROM detalle_ventas dv 
                 inner join productos p on dv.codigo_producto = p.codigo_producto

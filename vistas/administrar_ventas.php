@@ -92,7 +92,7 @@
 <!-- /.content -->
 
 
-<!-- Modal -->
+<!-- Modal editar ventas-->
 <div class="modal fade" id="modalEditarVenta" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl " role="document">
@@ -115,6 +115,7 @@
               <th>Categoria</th>
               <th>Producto</th>
               <th>Cantidad</th>
+              <th>Desc.%</th>
               <th>Total</th>
             </tr>
           </thead>
@@ -499,6 +500,9 @@
             data: 'cantidad'
           },
           {
+            data: 'descuento_porcentual'
+          },
+          {
             data: 'total_venta'
           }
         ],
@@ -519,7 +523,7 @@
             var TotalVenta = 0.00;
 
             for (let i = 0; i < output["data"].length; i++) {
-              TotalVenta = (parseFloat(TotalVenta) + parseFloat(output["data"][i][6])).toFixed(2);
+              TotalVenta = (parseFloat(TotalVenta) + parseFloat(output["data"][i][7])).toFixed(2);
             }
 
             $("#spnTotalVenta").html(TotalVenta);
@@ -552,6 +556,7 @@
           }
         }
       });
+
       $("#modalEditarVenta").modal('show');
     })
 
@@ -565,7 +570,8 @@
           identifier: [0, 'detalle_venta_id'],
           editable: [
             [2, 'codigo_producto'],
-            [5, 'cantidad']
+            [5, 'cantidad'],
+            [6, 'descuento_porcentual']
           ]
         },
         buttons: {

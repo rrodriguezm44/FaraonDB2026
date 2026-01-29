@@ -112,12 +112,12 @@ $pdf->Image("../fpdf/images/logo_oficial.png", 10, 5, 35, 20);
 //DATOS DEL CLIENTE Y LA VENTA 
 $pdf->SetXY(10, 32);
 $pdf->SetFont('Arial', 'B', 8);
-$pdf->Cell(20, 5, utf8_decode('Cliente:'), 0, 0, "L");
+$pdf->Cell(20, 5, utf8_decode('Raon Social:'), 0, 0, "L");
 $pdf->SetFont('Arial', '', 8);
 $pdf->Cell(30, 5, utf8_decode($empresa), 0, 1, "L");
 $pdf->SetFont('Arial', 'B', 8);
 $pdf->SetXY(10, 36);
-$pdf->Cell(20, 5, utf8_decode('Razón Social:'), 0, 0, "L");
+$pdf->Cell(20, 5, utf8_decode('Cliente:'), 0, 0, "L");
 $pdf->SetFont('Arial', '', 8);
 $pdf->Cell(30, 5, utf8_decode($nombre), 0, 1, "L");
 $pdf->SetFont('Arial', 'B', 8);
@@ -276,11 +276,11 @@ $pdf->SetXY(10, 112);
 $pdf->SetFont('Arial', 'B', 7);
 $pdf->Cell(6, 5, utf8_decode('Son: '), 0, 0, 'L');
 $pdf->SetFont('Arial', '', 6);
-$pdf->Cell(115, 5, utf8_decode($letra), 0, 0, 'L');
+$pdf->Cell(100, 5, utf8_decode($letra), 0, 0, 'L');
 $pdf->SetFont('Arial', 'B', 7);
-$pdf->Cell(25, 5, utf8_decode('TOTALES '), 0, 0, 'L');
-$pdf->Cell(24, 5, utf8_decode($subtotaldesc) . ' Bs.', 0, 0, 'R');
-$pdf->Cell(25, 5, $total, 0, 1, 'R');
+$pdf->Cell(20, 5, utf8_decode('TOTALES '), 0, 0, 'L');
+$pdf->Cell(25, 5, utf8_decode($subtotaldesc) . ' Bs.', 0, 0, 'R');
+$pdf->Cell(42, 5, $total, 0, 1, 'R');
 //NUEVO MENSAJE
 $pdf->SetXY(10, 116);
 $pdf->SetFont('Arial', 'B', 7);
@@ -290,7 +290,7 @@ $pdf->SetFont('Arial', '', 7);
 $pdf->Cell(6, 5, " UNA VEZ ENTREGADA LA MERCADERÍA NO SE ACEPTAN CAMBIOS NI DEVOLUCIONES", 0, 1, 'L');
 $pdf->SetXY(50, 132);
 $pdf->SetFont('Arial', '', 7);
-$pdf->Cell(100, 5, utf8_decode('ENTREGUE CONFORME'), 0, "C");
+$pdf->Cell(100, 5, utf8_decode('ENTREGUE CONFORME'), 0, 0, "C");
 $pdf->Cell(25, 5, utf8_decode('RECIBI CONFORME'), 0, 1, "C");
 
 //DATOS USUARIO
