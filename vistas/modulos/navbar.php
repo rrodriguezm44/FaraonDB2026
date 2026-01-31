@@ -5,7 +5,7 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
+      <!-- <li class="nav-item d-none d-sm-inline-block">
         <a style="cursor: pointer;" class="nav-link active"
           onclick="CargarContenido('content-wrapper','vistas/ventas.php')">
           Ventas
@@ -46,7 +46,7 @@
           onclick="CargarContenido('content-wrapper','vistas/administrar_ofertas.php')">
           Adm. Ofertas
         </a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a href="http://localhost/faraonbd?cerrar_sesion=1" class="nav-link">
           <i class="nav-icon fas text-danger fa-sign-out-alt" title="Cerrar Sesion"></i>

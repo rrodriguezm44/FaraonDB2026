@@ -802,6 +802,7 @@ function fnc_CargarDataTableInventario() {
         className: 'bg-secondary',
         action: function(e, dt, node, config) {
           fnc_CargarDataTableInventario();
+          //$('#tbl_inventario').DataTable().ajax.reload(null, false);
         }
       },
       {

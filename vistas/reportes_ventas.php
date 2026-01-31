@@ -43,30 +43,30 @@
               <div class="d-none d-md-flex col-md-12 ">
 
                 <div style="width: 20%;" class="form-floating mx-1">
-                  <input type="text" id="iptCliente" class="form-control" data-index="6">
+                  <input type="text" id="iptCliente" class="form-control" data-index="7">
                   <label for="iptCliente">Cliente</label>
                 </div>
 
                 <div style="width: 20%;" class="form-floating mx-1">
-                  <input type="text" id="iptVendedor" class="form-control" data-index="8">
+                  <input type="text" id="iptVendedor" class="form-control" data-index="9">
                   <label for="iptVendedor">Vendedor</label>
                 </div>
 
                 <div style="width: 20%;" class="form-floating mx-1">
-                  <input type="text" id="iptNroBoleta" class="form-control" data-index="3">
+                  <input type="text" id="iptNroBoleta" class="form-control" data-index="4">
                   <label for="iptNroBoleta">Nro. Boleta</label>
                 </div>
 
                 <div style="width: 20%;" class="form-floating mx-1">
 
-                  <input type="date" class="form-control" id="iptFechaVentaDesde" placeholder="desde" data-index="4">
+                  <input type="date" class="form-control" id="iptFechaVentaDesde" placeholder="desde" data-index="5">
                   <label for="iptFechaVentaDesde">F. Venta Desde</label>
                 </div>
 
 
                 <div style="width: 20%;" class="form-floating mx-1">
 
-                  <input type="date" class="form-control" id="iptFechaVentaHasta" placeholder="hasta" data-index="5">
+                  <input type="date" class="form-control" id="iptFechaVentaHasta" placeholder="hasta" data-index="6">
                   <label for="iptFechaVentaHasta">F. Venta Hasta</label>
                 </div>
 
@@ -94,24 +94,32 @@
               <th class="text-center">Opciones</th> <!-- 1 -->
 
               <th>Id Venta</th> <!-- 2 -->
+              
+              <th>Fecha Venta</th> <!-- 3 -->
 
-              <th>Nro. Boleta</th> <!-- 3 -->
+              <th>Nro. Boleta</th> <!-- 4 -->
 
-              <th>Fecha Venta</th> <!-- 4 -->
+              <th>Fecha Entrega</th> <!-- 5 -->
 
-              <th>Id. Cliente</th> <!-- 5 -->
+              <th>Id. Cliente</th> <!-- 6 -->
 
-              <th>Cliente</th> <!-- 6 -->
+              <th>Cliente</th> <!-- 7 -->
 
-              <th>Id. Vendedor</th> <!-- 7 -->
+              <th>Id. Vendedor</th> <!-- 8 -->
 
-              <th>Vendedor</th> <!-- 8 -->
+              <th>Vendedor</th> <!-- 9 -->
 
-              <th>Total Venta</th> <!-- 9 -->
+              <th>Total Venta</th> <!-- 10 -->
 
-              <th>Id. Usuario</th> <!-- 10 -->
+              <th>Forma Pago</th> <!-- 11 -->
 
-              <th>Estado</th> <!-- 11 -->
+              <th>Tipo Documento</th> <!-- 12 -->
+
+              <th>Observacion</th> <!-- 13 -->
+
+              <th>Id. Usuario</th> <!-- 14 -->
+
+              <th>Estado</th> <!-- 15 -->
 
             </tr>
           </thead>
@@ -171,7 +179,7 @@ $(document).ready(function() {
       var inicio = $("#iptFechaVentaDesde").val();
       var fin = $("#iptFechaVentaHasta").val();
       var proveedor = $("#iptProveedor").val().toLowerCase();
-      var fecha = data[4]; // Fecha de la tabla
+      var fecha = data[3]; // Fecha de la tabla
       var proveedorTabla = data[12] ? data[12].toLowerCase() : '';
 
       // Si no hay fechas ni proveedor, mostrar todo
@@ -249,6 +257,11 @@ function fnc_CargarDataTableVentas() {
   if ($.fn.DataTable.isDataTable('#tbl_ventas')) {
     return $('#tbl_ventas').DataTable();
   }
+
+  // if ($.fn.DataTable.isDataTable('#tbl_ventas')) {
+  //   $('#tbl_ventas').DataTable().destroy();
+  //   $('#tbl_ventas tbody').empty();
+  // }
   return $("#tbl_ventas").DataTable({
     dom: 'Bfrtip',
     buttons: [{
@@ -256,7 +269,9 @@ function fnc_CargarDataTableVentas() {
         className: 'btn btn-warning',
         action: function(e, dt, node, config) {
           // Refrescar la tabla de ventas de forma segura
-          $('#tbl_ventas').DataTable().ajax.reload(null, false);
+          //fnc_CargarDataTableVentas()
+          
+          fnc_LimpiarFomulario();
         }
       },
       //'excel', 'pdf', 'print', 'pageLength '
@@ -330,7 +345,7 @@ function fnc_CargarDataTableVentas() {
         className: 'control'
       },
       {
-        targets: [2, 5, 7, 10],
+        targets: [2, 6, 8, 14],
         visible: false
       },
       {
@@ -338,11 +353,11 @@ function fnc_CargarDataTableVentas() {
         className: 'text-center'
       },
       {
-        targets: 4,
+        targets: 5,
         type: 'date-eu'
       },
       {
-        targets: 11,
+        targets: 10,
         className: 'text-center'
       },
       {
@@ -407,16 +422,41 @@ function fnc_CargarDataTableVentas() {
   $('.select2').select2();
 } */
 
+ /*==========================================================================================================================================
+  L I M P I A R   I N P U T 'S   D E L   F O R M U L A R I O
+  *=========================================================================================================================================*/
+  function fnc_LimpiarFomulario() {
 
+    // RESETEAR TODOS LOS INPUTS DEL FORMULARIO
+    
+    $("#iptCliente").val('');
+    $("#iptVendedor").val('');
+    $("#iptNroBoleta").val('');
+    $("#iptFechaVentaDesde").val('');
+    $("#iptFechaVentaHasta").val('');
+    $("#iptProveedor").val('');
+    
+    //fnc_CargarDataTableVentas();
+    
+   //LIMPIAR DATATABLE DE PRODUCTOS AGREGADOS
+    if ($.fn.DataTable.isDataTable('#tbl_ventas')) {
+      $('#tbl_ventas').DataTable().clear().draw();
+    }
+    
+    $('#tbl_ventas').DataTable().ajax.reload(null, false);
+
+    // RECARGAR LA TABLA DE LISTADO DE VENTAS
+
+  }
 
 
 function fnc_DesactivarVenta(data) {
 
-  var nro_boleta = data[3];
+  var nro_boleta = data[4];
 
 
   Swal.fire({
-    title: 'Está seguro de desactivar la Venta con Nro. de Boleta: ' + data[3] + '?',
+    title: 'Está seguro de desactivar la Venta con Nro. de Boleta: ' + data[4] + '?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -453,10 +493,10 @@ function fnc_DesactivarVenta(data) {
 
 function fnc_ActivarVenta(data) {
 
-  var nro_boleta = data[3];
+  var nro_boleta = data[4];
 
   Swal.fire({
-    title: 'Está seguro de activar la Venta Nro. de Boleta: ' + data[3] + '?',
+    title: 'Está seguro de activar la Venta Nro. de Boleta: ' + data[4] + '?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
