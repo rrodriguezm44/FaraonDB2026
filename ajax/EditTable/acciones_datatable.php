@@ -35,3 +35,11 @@ if ($_POST['action'] == 'delete') {
 
   echo json_encode($_POST);
 }
+
+if ($_POST['action'] == 'add') {
+    // 1. Lógica SQL para INSERTAR un registro en blanco o con valores mínimos
+    // INSERT INTO detalle_venta (id_venta, codigo_producto, cantidad, precio) VALUES (...)
+    
+    // 2. Retornar éxito para que JS recargue la tabla
+    //echo json_encode(['status' => 'success', 'action' => 'add']);
+}

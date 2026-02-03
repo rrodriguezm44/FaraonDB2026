@@ -207,7 +207,7 @@ foreach ($resultados as $registro) {
 
 
   $valorUnitario = number_format($registro["precio"], 2);
-  $descuento_moneda = number_format(($registro["precio"] * $registro["descuento_porcentual"] / 100), 2);
+  $descuento_moneda = number_format($registro["precio"] * $registro["descuento_porcentual"] / 100, 2);
   $dstoPor = number_format($registro["descuento_porcentual"], 2);
   $precioTotal = number_format($registro["total_producto"], 2);
 
@@ -240,7 +240,7 @@ SELECT
     SUM(dv.precio) AS suma_precio,
     SUM(dv.total_producto) AS suma_total_productos,
     SUM(dv.descuento_porcentual) AS suma_descuento_porcentual,
-    ROUND(SUM(dv.precio * dv.descuento_porcentual / 100), 2) AS suma_precio_con_descuento
+    ROUND(SUM(dv.cantidad * (dv.precio * dv.descuento_porcentual / 100)), 2) AS suma_precio_con_descuento
 FROM 
     detalle_ventas dv
 WHERE 

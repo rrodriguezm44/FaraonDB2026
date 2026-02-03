@@ -256,21 +256,21 @@ if (isset($_SESSION['usuario'])) {
 
                   <!-- SUBTOTAL -->
                   <div class="col-12">
-                    <span>SUBTOTAL</span>
+                    <span>SUBTOTAL Bs.</span>
                     <span class="float-right" id="resumen_subtotal">0.00</span>
                   </div>
 
 
                   <!-- DESCUENTO -->
                   <div class="col-12 text-danger">
-                    <span>DESCUENTO</span>
+                    <span>DESCUENTO Bs.</span>
                     <span class="float-right" id="resumen_total_descuento">0.00</span>
                     <hr class="m-1" />
                   </div>
 
                   <!-- TOTAL -->
                   <div class="col-12 fs-5">
-                    <span>TOTAL</span>
+                    <span>TOTAL Bs.</span>
                     <span class="float-right" id="resumen_total_venta">0.00</span>
                   </div>
 
@@ -507,13 +507,15 @@ MODAL LISTADO DE PRODUCTOS
       if ($("#chkEfectivoExacto").is(':checked')) {
 
         var vuelto = 0;
-        var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+        //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+        var totalVenta = $("#resumen_total_venta").html();
 
         $("#iptEfectivoRecibido").val(totalVenta);
 
         $("#EfectivoEntregado").html(totalVenta);
 
-        var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html().replace("Bs. ", ""));
+        //var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html().replace("Bs. ", ""));
+        var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html());
 
         vuelto = parseFloat(totalVenta) - parseFloat(EfectivoRecibido);
 
@@ -676,7 +678,8 @@ MODAL LISTADO DE PRODUCTOS
   /*===================================================================*/
   function actualizarVuelto() {
 
-    var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+    //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+    var totalVenta = $("#resumen_total_venta").html();
 
     $("#chkEfectivoExacto").prop('checked', false);
 
@@ -688,7 +691,7 @@ MODAL LISTADO DE PRODUCTOS
 
       vuelto = parseFloat(efectivoRecibido) - parseFloat(totalVenta);
 
-      $("#Vuelto").html(vuelto.toFixed(2));
+      $("#Vuelto").html(parseFloat(vuelto).toFixed(2));
 
     } else {
 
@@ -892,7 +895,6 @@ MODAL LISTADO DE PRODUCTOS
   function fnc_ActualizarDatos() {
 
     $total_subtotal = 0;
-    $total_impuesto = 0;
     $total_descuento = 0.00;
     $total_compra = 0.00;
 
@@ -912,7 +914,7 @@ MODAL LISTADO DE PRODUCTOS
       $descuento = $('#tbl_ListadoProductos').DataTable().cell(index, 8).data()
 
       $subtotal = ($precio_venta * $cantidad);
-      $descuentoPor = ($precio_venta * $descuento) / 100;
+      $descuentoPor = $cantidad * (($precio_venta * $descuento) / 100);
       $total = $subtotal - $descuentoPor;
 
       $total_subtotal = $total_subtotal + $subtotal;
@@ -925,10 +927,12 @@ MODAL LISTADO DE PRODUCTOS
 
     })
 
-    $("#resumen_subtotal").html('Bs. ' + parseFloat($total_subtotal).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    $("#resumen_total_descuento").html('Bs. ' + parseFloat($total_descuento).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    $("#resumen_total_venta").html(parseFloat($total_compra).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-
+    // $("#resumen_subtotal").html(parseFloat($total_subtotal).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    // $("#resumen_total_descuento").html(parseFloat($total_descuento).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    // $("#resumen_total_venta").html(parseFloat($total_compra).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    $("#resumen_subtotal").html(parseFloat($total_subtotal).toFixed(2));
+    $("#resumen_total_descuento").html(parseFloat($total_descuento).toFixed(2));
+    $("#resumen_total_venta").html(parseFloat($total_compra).toFixed(2));
   }
 
   function fnc_SeleccionarProducto(data) {
@@ -1075,6 +1079,7 @@ G U A R D A R   VENTA ADQUSICION
 
                            
                   window.open("http://localhost/faraonbd//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
+                  //window.open("https://faraonv2.infinitassoluciones.net//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
                 
              
             }
