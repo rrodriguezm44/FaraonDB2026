@@ -99,7 +99,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title fw-bold">Editar Venta</h5>
+        <h5 class="modal-title fw-bold">Editar Venta <span id="nro_Titventa"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarModal">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -197,9 +197,9 @@
                 id="btnGuardarModificacion">Guardar</a>
               </div>
             </div>
-            <button type="button" class="btn btn-primary mb-3" id="btnAgregarNuevoProducto">
+            <!-- <button type="button" class="btn btn-primary mb-3" id="btnAgregarNuevoProducto">
               <i class="fas fa-plus"></i> Agregar Producto
-            </button>
+            </button> -->
           </div>
           
           <!-- <div class="col-md-8 d-flex flex-row align-items-center justify-content-end">
@@ -207,6 +207,7 @@
                 id="btnGuardarModificacion">Guardar</a></div>
           </div> -->
         </div>
+        <div class="table-responsive">
         <table id="tblDetalleVenta" class="table table-bordered table-striped w-100">
           <thead>
             <tr>
@@ -216,12 +217,16 @@
               <th>Categoria</th>
               <th>Producto</th>
               <th>Cantidad</th>
+              <th>Precio</th>
               <th>Desc.%</th>
               <th>Total</th>
+              <th>Accion</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="resultv">
+          </tbody>
         </table>
+        </div>
         <div class="card-footer pb-0">
           <h4 class="float-right">Total Venta Bs. <span id="spnTotalVenta">0.00</span></h4>
         </div>
@@ -235,7 +240,7 @@
 </div>
 
 <!-- Modal para agregar nuevo producto -->
- <div class="modal fade" id="modalAgregarProducto" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+ <!-- <div class="modal fade" id="modalAgregarProducto" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -277,7 +282,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -613,153 +618,46 @@
 
     })
 
+    
+
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EVENTOS PARA EDITAR UNA VENTA <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                                <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     $('#lstVentas tbody').on('click', '.btnEditarVenta', function() {
-
-      nroBoleta = $(this).attr("nroBoleta");
-      //console.log(nroBoleta);
-
       
-      if ($.fn.DataTable.isDataTable('#tblDetalleVenta')) {
-        $('#tblDetalleVenta').DataTable().destroy();
-      }
-
-      $('#tblDetalleVenta tbody').empty();
-
-      $('#tblDetalleVenta').DataTable({
-        columns: [{
-            data: 'detalle_venta_id'
-          },
-          {
-            data: 'nro_boleta'
-          },
-          {
-            data: 'codigo_producto'
-          },
-          {
-            data: 'nombre_categoria'
-          },
-          {
-            data: 'descripcion_producto'
-          },
-          {
-            data: 'cantidad'
-          },
-          {
-            data: 'descuento_porcentual'
-          },
-          {
-            data: 'total_venta'
-          }
-        ],
-        processing: true,
-        serverSide: true,
-        paging: false,
-        ajax: {
-          url: 'ajax/EditTable/obtener_detalle_venta.php',
-          type: 'POST',
-          dataType: 'json',
-          data: {
-            'nro_boleta': nroBoleta
-          },
-          "dataSrc": function(output) {
-
-            console.log("~ file: administrar_ventas.php ~ line 475 ~ $ ~ output", output)
-
-            var TotalVenta = 0.00;
-
-            for (let i = 0; i < output["data"].length; i++) {
-              TotalVenta = (parseFloat(TotalVenta) + parseFloat(output["data"][i][7])).toFixed(2);
-            }
-
-            $("#spnTotalVenta").html(TotalVenta);
-
-            return output["data"];
-          }
-        },
-        language: {
-          "sProcessing": "Procesando...",
-          "sLengthMenu": "Mostrar _MENU_ registros",
-          "sZeroRecords": "No se encontraron resultados",
-          "sEmptyTable": "Ningún dato disponible en esta tabla",
-          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ Registros",
-          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-          "sInfoPostFix": "",
-          "sSearch": "Buscar:",
-          "sUrl": "",
-          "sInfoThousands": ",",
-          "sLoadingRecords": "Cargando...",
-          "oPaginate": {
-            "sFirst": "Primero",
-            "sLast": "Último",
-            "sNext": "Siguiente",
-            "sPrevious": "Anterior"
-          },
-          "oAria": {
-            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-          }
-        }
-      });
-
+      nroBoleta = $(this).attr("nroBoleta");
       $("#modalEditarVenta").modal('show');
-    })
-
-    //EVENTO PARA ACTUALIZAR LA VENTANA MODAL
-    $('#tblDetalleVenta').on('draw.dt', function() {
-
-      $('#tblDetalleVenta').Tabledit({
-        url: 'ajax/EditTable/acciones_datatable.php',
-        dataType: 'json',
-        columns: {
-          identifier: [0, 'detalle_venta_id'],
-          editable: [
-            [2, 'codigo_producto'],
-            [5, 'cantidad'],
-            [6, 'descuento_porcentual']
-          ]
+      $("#nro_Titventa").html(' | Nro. Boleta: '+nroBoleta);
+      //alert(nroBoleta);
+      $.ajax({
+        url: 'ajax/TableEdit/obtener_detalle_venta.php',
+        method: 'POST',
+        data: {
+          'nro_boleta': nroBoleta
         },
-        buttons: {
-          edit: {
-            class: 'btn btn-sm btn-default',
-            html: '<span class="glyphicon glyphicon-pencil"></span>',
-            html: '<i class="fas fa-edit text-warning fs-6"></i>',
-            action: 'edit'
-          },
-          delete: {
-            class: 'btn btn-sm btn-default',
-            html: '<span class="glyphicon glyphicon-trash"></span>',
-            html: '<i class="far fa-trash-alt text-danger fs-6"></i>',
-            action: 'delete'
-          }
-        },
-        // restoreButton: false, 
-        onSuccess: function(data, textStatus, jqXHR) {
-          if (data.action == 'delete') {
-            $('#' + data.nro_boleta).remove();
-            $('#tblDetalleVenta').DataTable().ajax.reload();
-            table.ajax.reload();
-            Toast.fire({
-              icon: 'success',
-              title: 'Se eliminó correctamente'
-            });
-          }
-
-          if (data.action == 'edit') {
-            Toast.fire({
-              icon: 'success',
-              title: 'Se actualizó correctamente'
-            });
-
-            $('#tblDetalleVenta').DataTable().ajax.reload();
-            table.ajax.reload();
-          }
+        success: function(data) {
+          console.log(data);
+          $('#resultv').html(data);
+          
+          // Calcular el total de la venta
+          var totalVenta = 0.00;
+          $('#resultv tr').each(function() {
+            var totalCell = $(this).find('td:eq(7)').text();
+            if(totalCell && !isNaN(totalCell)) {
+              totalVenta += parseFloat(totalCell);
+            }
+          });
+          
+          $("#spnTotalVenta").html(totalVenta.toFixed(2));
         }
+
       });
-    });
+        
+    })
+      
+   
+
+    
 
     /*EVENTO PARA CERRAR LA VENTANA MODAL*/
     $("#btnCerrarModal, #btnCloseModal").on("click", function() {
@@ -795,5 +693,10 @@
     //   // });
     // });
 
+  }) //fin del ready
+
+  $(document).on("blur", "#cantidad", function() {
+    var id = $(this).data("id_cantidad");
+    
   })
 </script>
