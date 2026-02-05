@@ -95,11 +95,11 @@
 <!-- Modal editar ventas-->
 <div class="modal fade" id="modalEditarVenta" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
   aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl " role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title fw-bold">Editar Venta <span id="nro_Titventa"></span></h5>
+        <h5 class="modal-title fw-bold fs-5">Editar Venta <span id="nro_Titventa"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarModal">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -108,13 +108,13 @@
       <div class="modal-body">
         <div class="row">
           <!-- CLIENTES -->
-          <div class="col-12 col-md-5 col-lg-3">
+          <div class="col-12 col-sm-6 col-md-3">
 
             <div class="form-floating mb-2">
 
-              <select class="form-select select2" id="selCliente" aria-label="Floating label select example" name="selCliente" required>
+              <select class="form-select select2 fs-sm" id="selCliente" aria-label="Floating label select example" name="selCliente" required>
               </select>
-              <label for="selCliente">Clientes</label>
+              <label for="selCliente" class="fs-sm">Clientes</label>
               <div class="invalid-feedback">Seleccione al Cliente</div>
 
             </div>
@@ -122,14 +122,14 @@
           </div>
 
           <!-- SELECCIONAR VENDEDOR -->
-          <div class="col-12 col-md-7 col-lg-3">
+          <div class="col-12 col-sm-6 col-md-3">
             <div class="form-floating mb-2">
-              <select class="form-select select2" aria-label="Floating label select example" id="selVendedor"
+              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selVendedor"
                 name="selVendedor" required>
                 <option value="0">---Vendedores---</option>
               </select>
 
-              <label for="selVendedor">Seleccionar Vendedor</label>
+              <label for="selVendedor" class="fs-sm">Seleccionar Vendedor</label>
               <div class="invalid-feedback">Seleccione al Vendedor</div>
 
             </div>
@@ -137,42 +137,42 @@
           </div>
 
           <!-- SELECCIONAR TIPO DE DOCUMENTO -->
-          <div class="col-12 col-md-7 col-lg-3">
+          <div class="col-12 col-sm-6 col-md-3">
             <div class="form-floating mb-2">
 
-              <select class="form-select select2" aria-label="Floating label select example" id="selDocumentoVenta" name="selDocumentoVenta">
+              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selDocumentoVenta" name="selDocumentoVenta">
                 <option value="0" selected="true">Seleccione Documento</option>
                 <option value="1">Nota de Pago</option>
                 <option value="2">Factura</option>
               </select>
-              <label for="selDocumentoVenta">Tipo de Documento</label>
+              <label for="selDocumentoVenta" class="fs-sm">Tipo de Documento</label>
               <div class="invalid-feedback">Seleccione Tipo de Documento</div>
 
             </div>
           </div>
 
           <!-- SELECCIONAR TIPO DE PAGO -->
-          <div class="col-12 col-md-7 col-lg-3">
+          <div class="col-12 col-sm-6 col-md-3">
             <div class="form-floating mb-2">
-              <select class="form-select select2" aria-label="Floating label select example" id="selTipoPago" name="selTipoPago">
+              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selTipoPago" name="selTipoPago">
                 <option value="0" selected="true">Seleccione Tipo Pago</option>
                 <option value="1">Contado</option>
                 <option value="2">Credito</option>
                 <option value="3">Transferencia</option>
               </select>
-              <label for="selTipoPago">Tipo de Pago</label>
+              <label for="selTipoPago" class="fs-sm">Tipo de Pago</label>
               <div class="invalid-feedback">Seleccione Tipo de Pago</div>
 
             </div>
           </div>
 
           <!-- FECHA DE ENTREGA -->
-          <div class="col-12 col-md-4 col-lg-2">
+          <div class="col-12 col-sm-6 col-md-3">
             <div class="input-group mb-3">
 
               <div class="form-floating flex-grow-1">
-                <input type="text" class="form-control form-control-sm etimepicker-input" id="iptFechaEntrega" name="iptFechaEntrega">
-                <label for="iptFechaEntrega"> Fecha Entrega</label>
+                <input type="text" class="form-control form-control-sm etimepicker-input fs-sm" id="iptFechaEntrega" name="iptFechaEntrega">
+                <label for="iptFechaEntrega" class="fs-sm"> Fecha Entrega</label>
                 <input type="hidden" name="codUsuario" id="codUsuario" value="<?php echo $usuarioID; ?>">
               </div>
               <span class="input-group-text my-bg">
@@ -183,17 +183,17 @@
           </div>
           
           <!-- INPUT OBSERVACION -->
-          <div class="col-12 col-md-4 col-lg-7">
+          <div class="col-12 col-sm-12 col-md-6">
             <div class="form-floating mb-2">
-              <input type="text" class="form-control form-control-sm" id="iptObservacion" name="iptObservacion"
+              <input type="text" class="form-control form-control-sm fs-sm" id="iptObservacion" name="iptObservacion"
                 placeholder="Ingrese Observacion Venta" onKeyUp="javascript:this.value=this.value.toUpperCase();">
-              <label for="iptObservacion">Observaciones </label>
+              <label for="iptObservacion" class="fs-sm">Observaciones </label>
             </div>
           </div>
 
-          <div class="col-12 col-md-4 col-lg-3">
+          <div class="col-12 col-sm-12 col-md-3">
             <div class="form-floating mb-2">
-              <div class="form-group m-0"><a href="#" class="btn btn-success" style="width:120px;"
+              <div class="form-group m-0"><a href="#" class="btn btn-success w-100 fs-sm"
                 id="btnGuardarModificacion">Guardar</a>
               </div>
             </div>
@@ -208,27 +208,29 @@
           </div> -->
         </div>
         <div class="table-responsive">
-        <table id="tblDetalleVenta" class="table table-bordered table-striped w-100">
-          <thead>
+        <table id="tblDetalleVenta" class="table table-bordered table-striped w-100 small">
+          <thead class="thead-light">
             <tr>
-              <th>Id</th>
-              <th>Boleta</th>
-              <th>Codigo</th>
-              <th>Categoria</th>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Desc.%</th>
-              <th>Total</th>
-              <th>Accion</th>
+              <th class="text-center">Id</th>
+              <th class="text-center">Boleta</th>
+              <th class="text-center">Codigo</th>
+              <th class="d-none d-md-table-cell text-center">Categoria</th>
+              <th class="text-center">Producto</th>
+              <th class="text-center">Cantidad</th>
+              <th class="text-center">Precio</th>
+              <th class="text-center">Desc.%</th>
+              <th class="text-center">Total</th>
+              <th class="text-center">Accion</th>
             </tr>
           </thead>
-          <tbody id="resultv">
+          <tbody id="resultv" class="small">
           </tbody>
         </table>
         </div>
         <div class="card-footer pb-0">
-          <h4 class="float-right">Total Venta Bs. <span id="spnTotalVenta">0.00</span></h4>
+          <div class="d-flex justify-content-end">
+            <h5 class="mb-0 fs-6">Total Venta Bs. <span id="spnTotalVenta">0.00</span></h5>
+          </div>
         </div>
       </div>
 
@@ -655,43 +657,12 @@
         
     })
       
-   
-
-    
 
     /*EVENTO PARA CERRAR LA VENTANA MODAL*/
     $("#btnCerrarModal, #btnCloseModal").on("click", function() {
       $("#modalEditarVenta").modal('hide');
     });
 
-    // $('#btnAgregarNuevoProducto').on('click', function() {
-    //   //alert("Agregar nuevo producto");
-    //   $("#modalAgregarProducto").modal('show');
-    //   // $.ajax({
-    //   //   url: 'ajax/EditTable/acciones_datatable.php',
-    //   //   type: 'POST',
-    //   //   data: {
-    //   //     action: 'add',
-    //   //     // Aquí puedes pasar valores por defecto o el ID de la venta actual
-    //   //     id_venta: $('#id_venta_actual').val() 
-    //   //   },
-    //   //   dataType: 'json',
-    //   //   success: function(response) {
-    //   //     if (response.status == 'success') {
-    //   //         // Recargamos DataTables
-    //   //         $('#tblDetalleVenta').DataTable().ajax.reload(function() {
-    //   //             // Re-aplicamos Tabledit a las nuevas filas
-    //   //             inicializarTabledit();
-    //   //         }, false);
-              
-    //   //         Toast.fire({
-    //   //             icon: 'success',
-    //   //             title: 'Fila agregada. Ya puedes editarla.'
-    //   //         });
-    //   //     }
-    //   //   }
-    //   // });
-    // });
 
   }) //fin del ready
 
@@ -699,4 +670,59 @@
     var id = $(this).data("id_cantidad");
     
   })
+
+    $(document).on("click", "#btnAgregarNuevoProducto", function() {
+      var nro_boleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
+      var codpro_add = $("#codigo_producto_add").text().trim();
+      var cant_add = $("#cantidad_add").text().trim();
+      var desc_add = $("#descuento_add").text().trim();
+      
+      // Validar que los campos requeridos no estén vacíos
+      if (!codpro_add) {
+        alert('Por favor ingrese un código de producto');
+        $("#codigo_producto_add").focus();
+        return;
+      }
+      
+      if (!cant_add || isNaN(cant_add) || parseFloat(cant_add) <= 0) {
+        alert('Por favor ingrese una cantidad válida');
+        $("#cantidad_add").focus();
+        return;
+      }
+      
+      if (!desc_add || isNaN(desc_add)) {
+        desc_add = 0; // Si no hay descuento, usar 0 por defecto
+      }
+      
+      $.ajax({
+        url: 'ajax/TableEdit/insertar_producto_venta_detalle.php',
+        method: 'POST',
+        data: {
+          'nro_boleta': nro_boleta,
+          'codpro_add': codpro_add,
+          'cant_add': cant_add,
+          'desc_add': desc_add
+        },
+        success: function(data) {
+          console.log(data);
+          $('#resultv').html(data);
+          
+          // Recalcular el total de la venta después de agregar el producto
+          var totalVenta = 0.00;
+          $('#resultv tr').each(function() {
+            var totalCell = $(this).find('td:eq(7)').text();
+            if(totalCell && !isNaN(totalCell)) {
+              totalVenta += parseFloat(totalCell);
+            }
+          });
+          
+          $("#spnTotalVenta").html(totalVenta.toFixed(2));
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al agregar producto:', error);
+          alert('Error al agregar el producto: ' + error.message);
+        }
+      });
+    })
+
 </script>

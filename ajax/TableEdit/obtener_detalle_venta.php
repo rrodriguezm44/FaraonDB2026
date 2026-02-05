@@ -50,7 +50,7 @@ $html .= "
             <td id='precio_add' contenteditable></td>
             <td id='descuento_add' contenteditable></td>
             <td></td>
-            <td><button class='btnAgregar btn-success'>Agregar</button></td>
+            <td><button class='btnAgregar btn-success' id='btnAgregarNuevoProducto'>Agregar</button></td>
           </tr>";
 
 if ($html === "") {
