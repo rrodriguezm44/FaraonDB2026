@@ -101,11 +101,11 @@ while ($row1 = mysqli_fetch_assoc($result)) {
               <td>" . $row1['codigo_producto'] . "</td>
               <td>" . $row1['nombre_categoria'] . "</td>
               <td>" . $row1['descripcion_producto'] . "</td>
-              <td id='cantidad' data-id_cantidad='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['cantidad'] . "</td>
-              <td id='precio' data-id_precio='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['precio'] . "</td>
-              <td id='descuento' data-id_descuento='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['descuento_porcentual'] . "</td>
+              <td class='cantidad' data-id_cantidad='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['cantidad'] . "</td>
+              <td class='precio' data-id_precio='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['precio'] . "</td>
+              <td class='descuento' data-id_descuento='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['descuento_porcentual'] . "</td>
               <td>" . $row1['total_venta'] . "</td>
-              <td><button class='btnEliminar' data-id='" . $row1['detalle_venta_id'] . "'><i class='far fa-trash-alt text-danger fs-6'></i></button></td>
+              <td><button class='btnEliminar btn-danger' data-id_codigo='" . $row1['detalle_venta_id'] . "'>Eliminar</button></td>
             </tr>";
 }
 
@@ -120,7 +120,7 @@ $html .= "
             <td id='precio_add' contenteditable></td>
             <td id='descuento_add' contenteditable></td>
             <td></td>
-            <td><button class='btnAgregar btn-success' id='btnAgregarNuevoProducto'>Agregar</button></td>
+            <td><button class='btnAgregar btn-success'>Agregar</button></td>
           </tr>";
 
 if ($html === "") {

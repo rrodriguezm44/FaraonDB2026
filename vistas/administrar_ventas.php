@@ -666,7 +666,7 @@
   }
 
   //Evento para actualizar los campos de la tabla detalle de ventas
-  $(document).on("blur", "#cantidad", function() {
+  $(document).on("blur", ".cantidad", function() {
     var id = $(this).data("id_cantidad");
     var cantNew = $(this).text().trim();
 
@@ -675,7 +675,7 @@
   })
   
   //Evento para actualizar el precio
-  $(document).on("blur", "#precio", function() {
+  $(document).on("blur", ".precio", function() {
     var id = $(this).data("id_precio");
     var precioNew = $(this).text().trim();
 
@@ -684,7 +684,7 @@
   })
   
   //Evento para actualizar el descuento porcentual
-  $(document).on("blur", "#descuento", function() {
+  $(document).on("blur", ".descuento", function() {
     var id = $(this).data("id_descuento");
     var descNew = $(this).text().trim();
 
@@ -693,7 +693,7 @@
   })
 
   //Evento para insertar registro en la tabla de detalles de la venta
-  $(document).on("click", "#btnAgregarNuevoProducto", function() {
+  $(document).on("click", ".btnAgregar", function() {
     var nro_boleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
     var codpro_add = $("#codigo_producto_add").text().trim();
     var cant_add = $("#cantidad_add").text().trim();
@@ -773,7 +773,7 @@
   });
 
   //Evento para eliminar producto de la tabla de detalle de ventas
-  $(document).on("click", "#btnEliminar", function() {
+  $(document).on("click", ".btnEliminar", function() {
     var id = $(this).data("id_codigo");
     
     // Confirmar la eliminación con SweetAlert
