@@ -617,14 +617,78 @@
     /*EVENTO PARA CERRAR LA VENTANA MODAL*/
     $("#btnCerrarModal, #btnCloseModal").on("click", function() {
       $("#modalEditarVenta").modal('hide');
+      // Actualizar la tabla principal de ventas al cerrar el modal
+      table.ajax.reload();
     });
 
 
   }) //fin del ready
 
+  function actualizar_datos(id, texto, campo) {
+    $.ajax({
+      url: 'ajax/TableEdit/actualizar_producto_detalle_venta.php',
+      method: 'POST',
+      data: {
+        'detalle_venta_id': id,
+        'valor': texto,
+        'campo': campo
+      },
+      dataType: 'json',
+      success: function(response) {
+        if(response.status === 'success') {
+          // Actualizar la tabla del modal con los datos nuevos
+          $('#resultv').html(response.html);
+          
+          // Actualizar el total de la venta en el modal
+          $('#spnTotalVenta').html(response.total_venta);
+          
+          // Mostrar mensaje de éxito
+          Toast.fire({
+            icon: 'success',
+            title: response.mensaje
+          });
+        } else {
+          // Mostrar mensaje de error
+          Toast.fire({
+            icon: 'error',
+            title: response.error
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Error en la actualización:', error);
+        Toast.fire({
+          icon: 'error',
+          title: 'Error al actualizar el producto'
+        });
+      }
+    });
+  }
+
   //Evento para actualizar los campos de la tabla detalle de ventas
   $(document).on("blur", "#cantidad", function() {
     var id = $(this).data("id_cantidad");
+    var cantNew = $(this).text().trim();
+
+    actualizar_datos(id, cantNew,"cantidad");
+    
+  })
+  
+  //Evento para actualizar el precio
+  $(document).on("blur", "#precio", function() {
+    var id = $(this).data("id_precio");
+    var precioNew = $(this).text().trim();
+
+    actualizar_datos(id, precioNew,"precio");
+    
+  })
+  
+  //Evento para actualizar el descuento porcentual
+  $(document).on("blur", "#descuento", function() {
+    var id = $(this).data("id_descuento");
+    var descNew = $(this).text().trim();
+
+    actualizar_datos(id, descNew,"descuento_porcentual");
     
   })
 

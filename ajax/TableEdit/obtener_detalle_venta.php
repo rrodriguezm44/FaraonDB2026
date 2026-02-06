@@ -35,7 +35,7 @@ while ($row1 = mysqli_fetch_assoc($result)) {
               <td id='precio' data-id_precio='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['precio'] . "</td>
               <td id='descuento' data-id_descuento='" . $row1['detalle_venta_id'] . "' contenteditable>" . $row1['descuento_porcentual'] . "</td>
               <td>" . $row1['total_venta'] . "</td>
-              <td><button id='btnEliminar' class='btn btn-danger' data-id_codigo='" . $row1['detalle_venta_id'] . "'><i class='far fa-trash-alt fs-6'></i></button></td>
+              <td><button class='btnEliminar btn-danger' id='btnEliminar' data-id_codigo='" . $row1['detalle_venta_id'] . "'>Eliminar</button></td>
             </tr>";
 }
 
