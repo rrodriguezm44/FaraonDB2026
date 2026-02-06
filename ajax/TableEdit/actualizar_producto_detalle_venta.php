@@ -113,12 +113,12 @@ $html .= "
           <tr>
             <td></td>
             <td>" . $nro_boleta . "</td>
-            <td id='codigo_producto_add' contenteditable></td>
-            <td id='nombre_categoria_add' contenteditable></td>
-            <td id='descripcion_producto_add' contenteditable></td>
-            <td id='cantidad_add' contenteditable></td>
-            <td id='precio_add' contenteditable></td>
-            <td id='descuento_add' contenteditable></td>
+            <td id='codigo_producto_add' contenteditable class='bg-light-green'></td>
+            <td id='nombre_categoria_add'></td>
+            <td id='descripcion_producto_add'></td>
+            <td id='cantidad_add' contenteditable class='bg-light-green'></td>
+            <td id='precio_add'></td>
+            <td id='descuento_add' contenteditable class='bg-light-green'></td>
             <td></td>
             <td><button class='btnAgregar btn-success'>Agregar</button></td>
           </tr>";

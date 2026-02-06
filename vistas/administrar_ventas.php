@@ -247,6 +247,11 @@
 <script src="https://markcell.github.io/jquery-tabledit/assets/js/tabledit.min.js"></script>
 <!-- <script src="../vistas/assets/plugins/jquery-tabledit/jquery.tabledit.min.js"></script> -->
 
+<style>
+  .bg-light-green {
+    background-color: #d4edda !important;
+  }
+</style>
 <script>
   var Toast = Swal.mixin({
     toast: true,
