@@ -241,50 +241,6 @@
   </div>
 </div>
 
-<!-- Modal para agregar nuevo producto -->
- <!-- <div class="modal fade" id="modalAgregarProducto" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">Añadir Producto a la Venta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formNuevoProducto">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="select_producto">Buscar Producto (Código o Nombre)</label>
-                            <select class="form-control" id="select_producto" style="width: 100%"></select>
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label>Descripción</label>
-                            <input type="text" id="m_descripcion" class="form-control" readonly>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label>Precio Venta</label>
-                            <input type="number" id="m_precio" class="form-control" step="0.01">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label>Cantidad</label>
-                            <input type="number" id="m_cantidad" class="form-control" value="1">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label>Descuento (%)</label>
-                            <input type="number" id="m_descuento" class="form-control" value="0">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="procesarGuardadoModal()">
-                    <i class="fas fa-plus"></i> Agregar al Detalle
-                </button>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <!-- <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -666,63 +622,159 @@
 
   }) //fin del ready
 
+  //Evento para actualizar los campos de la tabla detalle de ventas
   $(document).on("blur", "#cantidad", function() {
     var id = $(this).data("id_cantidad");
     
   })
 
-    $(document).on("click", "#btnAgregarNuevoProducto", function() {
-      var nro_boleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
-      var codpro_add = $("#codigo_producto_add").text().trim();
-      var cant_add = $("#cantidad_add").text().trim();
-      var desc_add = $("#descuento_add").text().trim();
-      
-      // Validar que los campos requeridos no estén vacíos
-      if (!codpro_add) {
-        alert('Por favor ingrese un código de producto');
-        $("#codigo_producto_add").focus();
-        return;
+  //Evento para insertar registro en la tabla de detalles de la venta
+  $(document).on("click", "#btnAgregarNuevoProducto", function() {
+    var nro_boleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
+    var codpro_add = $("#codigo_producto_add").text().trim();
+    var cant_add = $("#cantidad_add").text().trim();
+    var desc_add = $("#descuento_add").text().trim();
+    
+    // Validar que los campos requeridos no estén vacíos
+    if (!codpro_add) {
+      alert('Por favor ingrese un código de producto');
+      $("#codigo_producto_add").focus();
+      return;
+    }
+    
+    if (!cant_add || isNaN(cant_add) || parseFloat(cant_add) <= 0) {
+      alert('Por favor ingrese una cantidad válida');
+      $("#cantidad_add").focus();
+      return;
+    }
+    
+    if (!desc_add || isNaN(desc_add)) {
+      desc_add = 0; // Si no hay descuento, usar 0 por defecto
+    }
+    
+    $.ajax({
+      url: 'ajax/TableEdit/insertar_producto_venta_detalle.php',
+      method: 'POST',
+      data: {
+        'nro_boleta': nro_boleta,
+        'codpro_add': codpro_add,
+        'cant_add': cant_add,
+        'desc_add': desc_add
+      },
+      success: function(data) {
+        console.log(data);
+        $('#resultv').html(data);
+        
+        // Recalcular el total de la venta después de agregar el producto
+        var totalVenta = 0.00;
+        $('#resultv tr').each(function() {
+          var totalCell = $(this).find('td:eq(7)').text();
+          if(totalCell && !isNaN(totalCell)) {
+            totalVenta += parseFloat(totalCell);
+          }
+        });
+        
+        $("#spnTotalVenta").html(totalVenta.toFixed(2));
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al agregar producto:', error);
+        alert('Error al agregar el producto: ' + error.message);
       }
-      
-      if (!cant_add || isNaN(cant_add) || parseFloat(cant_add) <= 0) {
-        alert('Por favor ingrese una cantidad válida');
-        $("#cantidad_add").focus();
-        return;
-      }
-      
-      if (!desc_add || isNaN(desc_add)) {
-        desc_add = 0; // Si no hay descuento, usar 0 por defecto
-      }
-      
-      $.ajax({
-        url: 'ajax/TableEdit/insertar_producto_venta_detalle.php',
-        method: 'POST',
-        data: {
-          'nro_boleta': nro_boleta,
-          'codpro_add': codpro_add,
-          'cant_add': cant_add,
-          'desc_add': desc_add
-        },
-        success: function(data) {
-          console.log(data);
-          $('#resultv').html(data);
-          
-          // Recalcular el total de la venta después de agregar el producto
-          var totalVenta = 0.00;
-          $('#resultv tr').each(function() {
-            var totalCell = $(this).find('td:eq(7)').text();
-            if(totalCell && !isNaN(totalCell)) {
-              totalVenta += parseFloat(totalCell);
-            }
-          });
-          
-          $("#spnTotalVenta").html(totalVenta.toFixed(2));
-        },
-        error: function(xhr, status, error) {
-          console.error('Error al agregar producto:', error);
-          alert('Error al agregar el producto: ' + error.message);
+    });
+  })
+    
+  // Evento para cuando se selecciona un producto, cargar sus datos
+  $(document).on('change', '#codigo_producto_add', function() {
+    var selectedProductCode = $(this).val();
+    
+    if(selectedProductCode) {
+      // Hacer una llamada AJAX para obtener los detalles del producto
+      $.post('ajax/get_producto_detalle.php', { codigo_producto: selectedProductCode }, function(response) {
+        var data = JSON.parse(response);
+        if(!data.error) {
+          // Llenar los campos correspondientes con la información del producto
+          $('#descripcion_producto_add').text(data.descripcion_producto);
+          $('#nombre_categoria_add').text(data.nombre_categoria);
+          $('#precio_add').text(data.precio_venta);
+        } else {
+          console.log('Error al obtener detalles del producto:', data.error);
         }
       });
-    })
+    } else {
+      // Limpiar los campos si no hay producto seleccionado
+      $('#descripcion_producto_add').text('');
+      $('#nombre_categoria_add').text('');
+      $('#precio_add').text('');
+    }
+  });
+
+  //Evento para eliminar producto de la tabla de detalle de ventas
+  $(document).on("click", "#btnEliminar", function() {
+    var id = $(this).data("id_codigo");
+    
+    // Confirmar la eliminación con SweetAlert
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "¿Desea eliminar este producto del detalle de venta?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "ajax/TableEdit/eliminar_producto_venta_detalle.php",
+          method: "POST",
+          data: {detalle_venta_id: id},
+          dataType: "json",
+          success: function(response) {
+            if(response.status == 'success') {
+              // Recargar el detalle de la venta en el modal
+              var nroBoleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
+              $.ajax({
+                url: 'ajax/TableEdit/obtener_detalle_venta.php',
+                method: 'POST',
+                data: {'nro_boleta': nroBoleta},
+                success: function(data) {
+                  $('#resultv').html(data);
+                  
+                  // Recalcular el total de la venta
+                  var totalVenta = 0.00;
+                  $('#resultv tr').each(function() {
+                    var totalCell = $(this).find('td:eq(8)').text(); // Columna del total
+                    if(totalCell && !isNaN(totalCell)) {
+                      totalVenta += parseFloat(totalCell);
+                    }
+                  });
+                  
+                  $("#spnTotalVenta").html(totalVenta.toFixed(2));
+                  Toast.fire({
+                    icon: 'success',
+                    title: response.message
+                  });
+                }
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: response.message
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("Error en la eliminación:", error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error al procesar la solicitud de eliminación'
+            });
+          }
+        });
+      }
+    });
+  })
 
 </script>
