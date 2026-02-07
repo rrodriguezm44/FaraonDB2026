@@ -253,6 +253,57 @@
     color: white !important;
     font-size: small;
   }
+  
+  /* Estilos para el modal de edición de ventas */
+  #modalEditarVenta .modal-dialog {
+    max-width: 95vw; /* Más responsive */
+    margin: 1.75rem auto;
+  }
+  
+  #modalEditarVenta .modal-content {
+    font-size: 0.85rem; /* Tamaño de fuente más pequeño */
+  }
+  
+  #modalEditarVenta .form-control,
+  #modalEditarVenta .form-select {
+    font-size: 0.8rem; /* Inputs más pequeños */
+    padding: 0.25rem 0.5rem; /* Padding reducido */
+  }
+  
+  #modalEditarVenta .form-label,
+  #modalEditarVenta label {
+    font-size: 0.75rem; /* Labels más pequeños */
+  }
+  
+  #modalEditarVenta .btn {
+    font-size: 0.8rem; /* Botones más pequeños */
+    padding: 0.25rem 0.5rem;
+  }
+  
+  #modalEditarVenta h5.modal-title {
+    font-size: 1rem; /* Título más pequeño */
+  }
+  
+  /* Tabla de productos */
+  #tblDetalleVenta {
+    font-size: 0.75rem; /* Tabla más compacta */
+  }
+  
+  #tblDetalleVenta th,
+  #tblDetalleVenta td {
+    padding: 0.25rem 0.5rem; /* Padding reducido en celdas */
+  }
+  
+  /* Select2 específico */
+  #modalEditarVenta .select2-selection {
+    font-size: 0.8rem !important;
+    min-height: calc(1.5em + 0.5rem + 2px) !important;
+  }
+  
+  #modalEditarVenta .select2-selection__rendered {
+    line-height: 1.2 !important;
+    padding: 0.25rem 0.5rem !important;
+  }
 </style>
 <script>
   var Toast = Swal.mixin({
@@ -793,24 +844,34 @@
         'cant_add': cant_add,
         'desc_add': desc_add
       },
-      success: function(data) {
-        console.log(data);
-        $('#resultv').html(data);
-        
-        // Recalcular el total de la venta después de agregar el producto
-        var totalVenta = 0.00;
-        $('#resultv tr').each(function() {
-          var totalCell = $(this).find('td:eq(7)').text();
-          if(totalCell && !isNaN(totalCell)) {
-            totalVenta += parseFloat(totalCell);
-          }
-        });
-        
-        $("#spnTotalVenta").html(totalVenta.toFixed(2));
+      dataType: 'json',
+      success: function(response) {
+        if(response.status === 'success') {
+          // Actualizar la tabla del modal con los datos nuevos
+          $('#resultv').html(response.html);
+          
+          // Actualizar el total de la venta en el modal
+          $('#spnTotalVenta').html(response.total_venta);
+          
+          // Mostrar mensaje de éxito
+          Toast.fire({
+            icon: 'success',
+            title: response.mensaje
+          });
+        } else {
+          // Mostrar mensaje de error
+          Toast.fire({
+            icon: 'error',
+            title: response.error
+          });
+        }
       },
       error: function(xhr, status, error) {
         console.error('Error al agregar producto:', error);
-        alert('Error al agregar el producto: ' + error.message);
+        Toast.fire({
+          icon: 'error',
+          title: 'Error al agregar el producto'
+        });
       }
     });
   })
@@ -863,36 +924,18 @@
           dataType: "json",
           success: function(response) {
             if(response.status == 'success') {
-              // Recargar el detalle de la venta en el modal
-              var nroBoleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
-              $.ajax({
-                url: 'ajax/TableEdit/obtener_detalle_venta.php',
-                method: 'POST',
-                data: {'nro_boleta': nroBoleta},
-                success: function(data) {
-                  $('#resultv').html(data);
-                      
-                  // Recalcular el total de la venta
-                  var totalVenta = 0.00;
-                  $('#resultv tr').each(function() {
-                    var totalCell = $(this).find('td:eq(8)').text(); // Columna del total
-                    if(totalCell && !isNaN(totalCell)) {
-                      totalVenta += parseFloat(totalCell);
-                    }
-                  });
-                      
-                  $("#spnTotalVenta").html(totalVenta.toFixed(2));
-                  Toast.fire({
-                    icon: 'success',
-                    title: response.message
-                  });
-                }
+              // Usar directamente la respuesta HTML y total del backend
+              $('#resultv').html(response.html);
+              $('#spnTotalVenta').html(response.total_venta);
+              
+              Toast.fire({
+                icon: 'success',
+                title: response.mensaje
               });
             } else {
-              Swal.fire({
+              Toast.fire({
                 icon: 'error',
-                title: 'Error',
-                text: response.message
+                title: response.error
               });
             }
           },

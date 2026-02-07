@@ -108,11 +108,24 @@ while ($row1 = mysqli_fetch_assoc($result)) {
             </tr>";
 }
 
+// Obtener lista de productos para el select
+$query_productos = "SELECT codigo_producto, nombre FROM productos ORDER BY nombre";
+$result_productos = mysqli_query($connection, $query_productos);
+
+$productos_options = "<option value=''>Seleccione un producto...</option>";
+while ($prod = mysqli_fetch_assoc($result_productos)) {
+  $productos_options .= "<option value='" . $prod['codigo_producto'] . "'>" . $prod['codigo_producto'] . " - " . $prod['nombre'] . "</option>";
+}
+
 $html .= "
           <tr>
             <td></td>
             <td>" . $nro_boleta . "</td>
-            <td id='codigo_producto_add' contenteditable class='bg-light-green'></td>
+            <td>
+              <select id='codigo_producto_add' class='form-control bg-light-green'>
+                " . $productos_options . "
+              </select>
+            </td>
             <td id='nombre_categoria_add'></td>
             <td id='descripcion_producto_add'></td>
             <td id='cantidad_add' contenteditable class='bg-light-green'></td>
@@ -126,6 +139,29 @@ if ($html === "") {
   $html = "<tr><td colspan='8'>No se encontraron detalles para esta venta</td></tr>";
 }
 
-// Devolver el HTML generado como respuesta
-echo $html;
+// Calcular el total de la venta actualizada
+$query_total = "SELECT SUM(total_producto) as total_venta FROM detalle_ventas WHERE nro_boleta = '$nro_boleta'";
+$result_total = mysqli_query($connection, $query_total);
+$row_total = mysqli_fetch_assoc($result_total);
+$total_venta = number_format($row_total['total_venta'], 2);
+
+// Actualizar el total en la tabla principal de ventas
+$update_venta_query = "UPDATE ventas SET total = '$row_total[total_venta]' WHERE nro_boleta = '$nro_boleta'";
+$result_update_venta = mysqli_query($connection, $update_venta_query);
+
+if (!$result_update_venta) {
+    echo json_encode(array('error' => 'Error al actualizar el total de la venta principal: ' . mysqli_error($connection)));
+    exit;
+}
+
+// Devolver los resultados como JSON
+$response = array(
+    'status' => 'success',
+    'html' => $html,
+    'nro_boleta' => $nro_boleta,
+    'total_venta' => $total_venta,
+    'mensaje' => 'Producto agregado correctamente'
+);
+
+echo json_encode($response);
 ?>
