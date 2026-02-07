@@ -29,6 +29,22 @@ class AjaxVentas
     echo json_encode($ventas, JSON_UNESCAPED_UNICODE);
   }
 
+  public function ajaxActualizarVenta($nro_boleta, $descripcion_venta, $id_cliente, $obs_venta, $fechaEntrega, $vendedor, $tipoPago, $docVenta)
+  {
+
+    $respuesta = VentasControlador::ctrActualizarVenta($nro_boleta, $descripcion_venta, $id_cliente, $obs_venta, $fechaEntrega, $vendedor, $tipoPago, $docVenta);
+
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+  }
+
+  public function ajaxObtenerVentaPorNroBoleta($nroBoleta)
+  {
+
+    $venta = VentasControlador::ctrObtenerVentaPorNroBoleta($nroBoleta);
+
+    echo json_encode($venta, JSON_UNESCAPED_UNICODE);
+  }
+
   public function ajaxEliminarVenta($nroBoleta)
   {
 
@@ -50,6 +66,14 @@ if (isset($_POST["accion"]) && $_POST["accion"] == 1) {
 
   $ventas = new AjaxVentas();
   $ventas->ajaxEliminarVenta($_POST["Boleta"]);
+} else if (isset($_POST["accion"]) && $_POST["accion"] == 4) { // OBTENER VENTA POR NRO BOLETA
+
+  $ventas = new AjaxVentas();
+  $ventas->ajaxObtenerVentaPorNroBoleta($_POST["nroBoleta"]);
+} else if (isset($_POST["accion"]) && $_POST["accion"] == 5) { // ACTUALIZAR VENTA
+
+  $ventas = new AjaxVentas();
+  $ventas->ajaxActualizarVenta($_POST["nro_boleta"], $_POST["descripcion_venta"], $_POST["id_cliente"], $_POST["obs_venta"], $_POST["fechaEntrega"], $_POST["vendedor"], $_POST["tipoPago"], $_POST["docVenta"]);
 } else {
 
   if ((isset($_POST["arr"]))) {

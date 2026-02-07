@@ -181,6 +181,42 @@ class VentasModelo
     $stmt = null;
   }
 
+  static public function mdlObtenerVentaPorNroBoleta($nroBoleta)
+  {
+
+    $stmt = Conexion::conectar()->prepare("SELECT v.nro_boleta, v.descripcion, v.total, v.cliente_id, v.observa_venta, v.fecha_entrega, v.vendedorID, v.tipoPago, v.docuVenta, v.usuarioID, v.fecha_venta, c.nombre AS nombre_cliente, u.nombre AS nombre_vendedor, tp.descripcion AS tipo_pago_desc, td.descripcion AS tipo_doc_venta FROM ventas v LEFT JOIN clientes c ON v.cliente_id = c.id LEFT JOIN usuarios u ON v.vendedorID = u.id LEFT JOIN tipo_pago tp ON v.tipoPago = tp.id LEFT JOIN tipo_documento_venta td ON v.docuVenta = td.id WHERE v.nro_boleta = :nroBoleta");
+
+    $stmt->bindParam(":nroBoleta", $nroBoleta, PDO::PARAM_STR);
+
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_OBJ);
+  }
+
+  static public function mdlActualizarVenta($nro_boleta, $descripcion_venta, $id_cliente, $obs_venta, $fechaEntrega, $vendedor, $tipoPago, $docVenta)
+  {
+
+    date_default_timezone_set("America/La_Paz");
+    $fechaIng = date("Y-m-d", strtotime($fechaEntrega));
+
+    $stmt = Conexion::conectar()->prepare("UPDATE ventas SET descripcion = :descripcion, cliente_id = :id_cliente, observa_venta = :obs_venta, fecha_entrega = :fechaEntrega, vendedorID = :codVendedor, tipoPago = :tipoPago, docuVenta = :docVenta WHERE nro_boleta = :nro_boleta");
+
+    $stmt->bindParam(":nro_boleta", $nro_boleta, PDO::PARAM_STR);
+    $stmt->bindParam(":descripcion", $descripcion_venta, PDO::PARAM_STR);
+    $stmt->bindParam(":id_cliente", $id_cliente, PDO::PARAM_INT);
+    $stmt->bindParam(":obs_venta", $obs_venta, PDO::PARAM_STR);
+    $stmt->bindParam(":fechaEntrega", $fechaIng, PDO::PARAM_STR);
+    $stmt->bindParam(":codVendedor", $vendedor, PDO::PARAM_INT);
+    $stmt->bindParam(":tipoPago", $tipoPago, PDO::PARAM_INT);
+    $stmt->bindParam(":docVenta", $docVenta, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+      return "ok";
+    } else {
+      return "error";
+    }
+  }
+
   static public function mdlEliminarVenta($nroBoleta)
   {
 

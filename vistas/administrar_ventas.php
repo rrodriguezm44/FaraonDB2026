@@ -249,7 +249,9 @@
 
 <style>
   .bg-light-green {
-    background-color: #d4edda !important;
+    background-color:rgb(100, 156, 113) !important; /* Verde más oscuro para mejor contraste */
+    color: white !important;
+    font-size: small;
   }
 </style>
 <script>
@@ -265,6 +267,43 @@
     let table, ventas_desde, ventas_hasta;
     let groupColumn = 0;
 
+    // Cargar clientes en el select
+    $.ajax({
+      url: 'ajax/clientes.ajax.php',
+      method: 'GET',
+      dataType: 'json',
+      success: function(clientes) {
+        $("#selCliente").empty();
+        $("#selCliente").append('<option value="0">---Seleccione Cliente---</option>');
+        $.each(clientes, function(index, cliente) {
+          $("#selCliente").append('<option value="' + cliente.id + '">' + cliente.nombre + '</option>');
+        });
+        $("#selCliente").select2();
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al cargar clientes:', error);
+      }
+    });
+
+    // Cargar vendedores en el select
+    $.ajax({
+      url: 'ajax/vendedores.ajax.php',
+      method: 'POST',
+      data: {'accion': 'obtener_vendedores'},
+      dataType: 'json',
+      success: function(vendedores) {
+        $("#selVendedor").empty();
+        $("#selVendedor").append('<option value="0">---Seleccione Vendedor---</option>');
+        $.each(vendedores, function(index, vendedor) {
+          $("#selVendedor").append('<option value="' + vendedor.id_usuario + '">' + vendedor.nombre_usuario + '</option>');
+        });
+        $("#selVendedor").select2();
+      },
+      error: function(xhr, status, error) {
+        console.error('Error al cargar vendedores:', error);
+      }
+    });
+
     $('#ventas_desde, #ventas_hasta').inputmask('dd/mm/yyyy', {
       'placeholder': 'dd/mm/yyyy'
     })
@@ -278,7 +317,6 @@
     ventas_desde = ventas_desde.substr(6, 4) + '-' + ventas_desde.substr(3, 2) + '-' + ventas_desde.substr(0, 2);
     //console.log("🚀 ~ file: administrar_ventas.php ~ line 97 ~ $ ~ ventas_desde", ventas_desde)
     ventas_hasta = ventas_hasta.substr(6, 4) + '-' + ventas_hasta.substr(3, 2) + '-' + ventas_hasta.substr(0, 2);
-    //console.log("🚀 ~ file: administrar_ventas.php ~ line 99 ~ $ ~ ventas_hasta", ventas_hasta)
 
 
     table = $('#lstVentas').DataTable({
@@ -591,7 +629,33 @@
       nroBoleta = $(this).attr("nroBoleta");
       $("#modalEditarVenta").modal('show');
       $("#nro_Titventa").html(' | Nro. Boleta: '+nroBoleta);
-      //alert(nroBoleta);
+      
+      // Cargar los datos principales de la venta
+      $.ajax({
+        url: 'ajax/ventas.ajax.php',
+        method: 'POST',
+        data: {
+          'accion': 4,
+          'nroBoleta': nroBoleta
+        },
+        dataType: 'json',
+        success: function(ventaData) {
+          if(ventaData) {
+            // Llenar los campos del formulario con los datos de la venta
+            $("#selCliente").val(ventaData.cliente_id).trigger('change');
+            $("#selVendedor").val(ventaData.vendedorID).trigger('change');
+            $("#selDocumentoVenta").val(ventaData.docuVenta).trigger('change');
+            $("#selTipoPago").val(ventaData.tipoPago).trigger('change');
+            $("#iptFechaEntrega").val(ventaData.fecha_entrega);
+            $("#iptObservacion").val(ventaData.observa_venta);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al cargar los datos de la venta:', error);
+        }
+      });
+      
+      // Cargar el detalle de la venta
       $.ajax({
         url: 'ajax/TableEdit/obtener_detalle_venta.php',
         method: 'POST',
@@ -605,7 +669,7 @@
           // Calcular el total de la venta
           var totalVenta = 0.00;
           $('#resultv tr').each(function() {
-            var totalCell = $(this).find('td:eq(7)').text();
+            var totalCell = $(this).find('td:eq(8)').text(); // Columna total
             if(totalCell && !isNaN(totalCell)) {
               totalVenta += parseFloat(totalCell);
             }
@@ -613,7 +677,6 @@
           
           $("#spnTotalVenta").html(totalVenta.toFixed(2));
         }
-
       });
         
     })
@@ -700,7 +763,7 @@
   //Evento para insertar registro en la tabla de detalles de la venta
   $(document).on("click", ".btnAgregar", function() {
     var nro_boleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
-    var codpro_add = $("#codigo_producto_add").text().trim();
+    var codpro_add = $("#codigo_producto_add").val().trim();
     var cant_add = $("#cantidad_add").text().trim();
     var desc_add = $("#descuento_add").text().trim();
     
@@ -780,7 +843,7 @@
   //Evento para eliminar producto de la tabla de detalle de ventas
   $(document).on("click", ".btnEliminar", function() {
     var id = $(this).data("id_codigo");
-    
+        
     // Confirmar la eliminación con SweetAlert
     Swal.fire({
       title: '¿Está seguro?',
@@ -808,7 +871,7 @@
                 data: {'nro_boleta': nroBoleta},
                 success: function(data) {
                   $('#resultv').html(data);
-                  
+                      
                   // Recalcular el total de la venta
                   var totalVenta = 0.00;
                   $('#resultv tr').each(function() {
@@ -817,7 +880,7 @@
                       totalVenta += parseFloat(totalCell);
                     }
                   });
-                  
+                      
                   $("#spnTotalVenta").html(totalVenta.toFixed(2));
                   Toast.fire({
                     icon: 'success',
@@ -845,5 +908,120 @@
       }
     });
   })
+      
+  // Evento para guardar las modificaciones de la venta
+  $("#btnGuardarModificacion").on("click", function(e) {
+    e.preventDefault();
+        
+    // Obtener los valores de los campos
+    var nroBoleta = $("#nro_Titventa").text().replace(' | Nro. Boleta: ', '').trim();
+    var descripcionVenta = "Venta modificada"; // Descripción predeterminada o puede tomar el valor del número de boleta
+    var idCliente = $("#selCliente").val();
+    var obsVenta = $("#iptObservacion").val();
+    var fechaEntrega = $("#iptFechaEntrega").val();
+    var vendedor = $("#selVendedor").val();
+    var tipoPago = $("#selTipoPago").val();
+    var docVenta = $("#selDocumentoVenta").val();
+        
+    // Validar que los campos requeridos no estén vacíos
+    if (!idCliente || idCliente == 0) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Seleccione un cliente'
+      });
+      return;
+    }
+        
+    if (!vendedor || vendedor == 0) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Seleccione un vendedor'
+      });
+      return;
+    }
+        
+    if (!tipoPago || tipoPago == 0) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Seleccione un tipo de pago'
+      });
+      return;
+    }
+        
+    if (!docVenta || docVenta == 0) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Seleccione un documento de venta'
+      });
+      return;
+    }
+        
+    if (!fechaEntrega) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Ingrese una fecha de entrega'
+      });
+      return;
+    }
+        
+    // Confirmar la actualización con SweetAlert
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "¿Desea guardar las modificaciones de la venta?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, guardar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "ajax/ventas.ajax.php",
+          method: "POST",
+          data: {
+            accion: 5,
+            nro_boleta: nroBoleta,
+            descripcion_venta: descripcionVenta,
+            id_cliente: idCliente,
+            obs_venta: obsVenta,
+            fechaEntrega: fechaEntrega,
+            vendedor: vendedor,
+            tipoPago: tipoPago,
+            docVenta: docVenta
+          },
+          dataType: "json",
+          success: function(response) {
+            if(response == "ok") {
+              Toast.fire({
+                icon: 'success',
+                title: 'Venta actualizada correctamente'
+              });
+                  
+              // Cerrar el modal
+              $("#modalEditarVenta").modal('hide');
+                  
+              // Actualizar la tabla principal de ventas
+              table.ajax.reload();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al actualizar la venta'
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("Error al actualizar la venta:", error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error al procesar la solicitud de actualización'
+            });
+          }
+        });
+      }
+    });
+  });
 
 </script>

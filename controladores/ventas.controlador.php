@@ -27,6 +27,22 @@ class VentasControlador
     return $ventas;
   }
 
+  static public function ctrObtenerVentaPorNroBoleta($nroBoleta)
+  {
+
+    $venta = VentasModelo::mdlObtenerVentaPorNroBoleta($nroBoleta);
+
+    return $venta;
+  }
+
+  static public function ctrActualizarVenta($nro_boleta, $descripcion_venta, $id_cliente, $obs_venta, $fechaEntrega, $vendedor, $tipoPago, $docVenta)
+  {
+
+    $respuesta = VentasModelo::mdlActualizarVenta($nro_boleta, $descripcion_venta, $id_cliente, $obs_venta, $fechaEntrega, $vendedor, $tipoPago, $docVenta);
+
+    return $respuesta;
+  }
+
   static public function ctrEliminarVenta($nroBoleta)
   {
 

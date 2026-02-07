@@ -39,11 +39,24 @@ while ($row1 = mysqli_fetch_assoc($result)) {
             </tr>";
 }
 
+// Obtener lista de productos para el select
+$query_productos = "SELECT codigo_producto, nombre FROM productos ORDER BY nombre";
+$result_productos = mysqli_query($connection, $query_productos);
+
+$productos_options = "<option value=''>Seleccione un producto...</option>";
+while ($prod = mysqli_fetch_assoc($result_productos)) {
+  $productos_options .= "<option value='" . $prod['codigo_producto'] . "'>" . $prod['codigo_producto'] . " - " . $prod['nombre'] . "</option>";
+}
+
 $html .= "
           <tr>
             <td></td>
             <td>" . $nro_boleta . "</td>
-            <td id='codigo_producto_add' contenteditable class='bg-light-green'></td>
+            <td>
+              <select id='codigo_producto_add' class='form-control bg-light-green'>
+                " . $productos_options . "
+              </select>
+            </td>
             <td id='nombre_categoria_add'></td>
             <td id='descripcion_producto_add'></td>
             <td id='cantidad_add' contenteditable class='bg-light-green'></td>
