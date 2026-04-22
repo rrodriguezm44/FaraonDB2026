@@ -6,7 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // Verificar si el usuario está autenticado
 if (isset($_SESSION['usuario'])) {
   $nombre_usuario = $_SESSION["usuario"]->nombre_usuario;
+  $apellido_usuario = $_SESSION["usuario"]->apellido_usuario;
   $usuarioID = $_SESSION["usuario"]->id_usuario;
+  $perfil_usuario = $_SESSION["usuario"]->id_perfil_usuario;
 } else {
   //header("Location: login.php");
   exit();
@@ -93,17 +95,24 @@ if (isset($_SESSION['usuario'])) {
 
             <!-- SELECCIONAR VENDEDOR -->
             <div class="col-12 col-md-7 col-lg-3">
-              <div class="form-floating mb-2">
-                <select class="form-select select2" aria-label="Floating label select example" id="selVendedor"
-                  name="selVendedor" required>
-                  <option value="0">---Vendedores---</option>
-                </select>
-
-                <label for="selVendedor">Seleccionar Vendedor</label>
-                <div class="invalid-feedback">Seleccione al Vendedor</div>
-
-              </div>
-
+              <?php if ($perfil_usuario == 2): ?>
+                <!-- Si el perfil es vendedor (2), mostrar nombre directamente -->
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control" id="selVendedorDisplay" value="<?php echo htmlspecialchars($nombre_usuario . ' ' . $apellido_usuario); ?>" readonly>
+                  <input type="hidden" name="selVendedor" id="selVendedor" value="<?php echo $usuarioID; ?>">
+                  <label for="selVendedorDisplay">Vendedor</label>
+                </div>
+              <?php else: ?>
+                <!-- Si el perfil no es vendedor, mostrar select para elegir vendedor -->
+                <div class="form-floating mb-2">
+                  <select class="form-select select2" aria-label="Floating label select example" id="selVendedor"
+                    name="selVendedor" required>
+                    <option value="0">---Vendedores---</option>
+                  </select>
+                  <label for="selVendedor">Seleccionar Vendedor</label>
+                  <div class="invalid-feedback">Seleccione al Vendedor</div>
+                </div>
+              <?php endif; ?>
             </div>
 
 
@@ -179,7 +188,7 @@ if (isset($_SESSION['usuario'])) {
         </form>
 
         <!-- --------------------------------------------------------- -->
-        <!--LISTADO DE PRODUCTOS -->
+        <!--LISTADO DE PRODUCTOS --> SELECCIONADOS PARA LA VENTA
         <!-- --------------------------------------------------------- -->
         <div class="row mb-3">
 
@@ -189,8 +198,8 @@ if (isset($_SESSION['usuario'])) {
               <thead class="bg-main text-white">
                 <tr style="font-size: 14px;">
                   <th></th>
-                  <th>Cod Producto</th>
                   <th>Producto</th>
+                  <th>Cod Producto</th>
                   <th>Cantidad</th>
                   <th>Cantidad Temp</th>
                   <th>Precio Venta</th>
@@ -294,7 +303,7 @@ if (isset($_SESSION['usuario'])) {
 
 
 <!-- =============================================================================================================================
-MODAL LISTADO DE PRODUCTOS
+MODAL LISTADO DE PRODUCTOS PARA ELEGIR AL MOMENTO DE LA VENTA
 ===============================================================================================================================-->
 <div class="modal fade" id="mdlListadoProductos" role="dialog" tabindex="-1">
 
@@ -368,7 +377,10 @@ MODAL LISTADO DE PRODUCTOS
     fnc_CargarDataTableListadoProductos(); //listado de productos elegidos
     fnc_CargarDataTableProductos(); //productos por elegir
 
-    // $('#selCliente').select2({ width : 'resolve'}); // es necesario anular el valor predeterminado modificado 
+    $('#selCliente').select2({ width : 'resolve'}); // Inicializamos Select2 para el campo cliente
+    <?php if ($perfil_usuario != 2): ?>
+    $('#selVendedor').select2({ width : 'resolve'}); // Inicializamos Select2 para el campo vendedor solo si no es vendedor
+    <?php endif; ?>
 
     $('#iptFechaEntrega').datetimepicker({
       format: 'YYYY-MM-DD',
@@ -390,10 +402,12 @@ MODAL LISTADO DE PRODUCTOS
     $.post("ajax/busca_cliente.php", function(data) {
       $("#selCliente").html(data);
     });
-    //MOSTRANDO DATOS DEL VENDEDOR
+    //MOSTRANDO DATOS DEL VENDEDOR - solo si el usuario no es vendedor (perfil != 2)
+    <?php if ($perfil_usuario != 2): ?>
     $.post("ajax/busca_vendedor.php", function(data) {
       $("#selVendedor").html(data);
     });
+    <?php endif; ?>
 
     /* ======================================================================================
     EVENTO PARA MODIFICAR LA CANTIDAD DEL PRODUCTOS A COMPRAR
@@ -730,10 +744,10 @@ MODAL LISTADO DE PRODUCTOS
           "data": "acciones"
         },
         {
-          "data": "codigo_producto"
+          "data": "producto"
         },
         {
-          "data": "producto"
+          "data": "codigo_producto"
         },
         {
           "data": "cantidad"
@@ -788,7 +802,7 @@ MODAL LISTADO DE PRODUCTOS
       var data = row.data();
 
       if (producto == data['codigo_producto']) {
-        mensajeToast("warning", "El producto la fue agregado al listado");
+        mensajeToast("warning", "El producto ya fue agregado al listado");
         exit;
       }
     })
@@ -815,8 +829,8 @@ MODAL LISTADO DE PRODUCTOS
               "<i class='fas fa-trash fs-6'> </i> " +
               "</span>" +
               "</center>",
-            'codigo_producto': respuesta['codigo_producto'],
             'producto': respuesta['nombre'],
+            'codigo_producto': respuesta['codigo_producto'],
             'cantidad': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
               respuesta['codigo_producto'] +
               '" class="form-control text-center iptCantidad p-0 m-0 px-2" value="1">',
@@ -868,7 +882,12 @@ MODAL LISTADO DE PRODUCTOS
     $("#selCliente").val('0').trigger('change');
     $("#selDocumentoVenta").val('0').trigger('change');
     $("#selTipoPago").val('1').trigger('change');
+    <?php if ($perfil_usuario != 2): ?>
     $("#selVendedor").val('0').trigger('change');
+    <?php else: ?>
+    // Si el usuario es vendedor, mantener su ID como valor oculto
+    $("#selVendedor").val('<?php echo $usuarioID; ?>');
+    <?php endif; ?>
 
     // LIMPIAR EFECTIVO Y VUELTO
     $("#EfectivoEntregado").html('0.00');
@@ -961,11 +980,20 @@ G U A R D A R   VENTA ADQUSICION
       return;
     }
 
-    // Validar que vendedor sea válido (no sea 0)
-    if ($("#selVendedor").val() == 0 || $("#selVendedor").val() == "") {
+    // Validar que vendedor sea válido
+    <?php if ($perfil_usuario != 2): ?>
+    // Si el usuario no es vendedor, verificar que haya seleccionado uno
+    if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
       mensajeToast("error", "Debe seleccionar un vendedor válido");
       return;
     }
+    <?php else: ?>
+    // Si el usuario es vendedor, validar que el ID esté presente
+    if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
+      mensajeToast("error", "Error con el vendedor asignado");
+      return;
+    }
+    <?php endif; ?>
 
     $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
       count = count + 1;

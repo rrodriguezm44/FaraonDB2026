@@ -155,11 +155,11 @@ $pdf->Cell(30, 5, utf8_decode(isset($datoven["nombre_usuario"]) ? $datoven["nomb
 
 $pdf->SetXY(10, 50);
 $pdf->SetFont('Arial', 'B', 7);
-$pdf->MultiCell(15, 5, utf8_decode('Cantidad'), 1, 'C');
-$pdf->SetXY(25, 50);
-$pdf->MultiCell(15, 5, utf8_decode('Codigo'), 1, "C");
-$pdf->SetXY(40, 50);
-$pdf->MultiCell(80, 5, utf8_decode('Descripcion'), 1, "C");
+$pdf->MultiCell(10, 5, 'Cant.', 1, 'C');
+$pdf->SetXY(20, 50);
+$pdf->MultiCell(30, 5, 'Codigo', 1, "C");
+$pdf->SetXY(50, 50);
+$pdf->MultiCell(70, 5, utf8_decode('Descripcion'), 1, "C");
 $pdf->SetXY(120, 50);
 $pdf->MultiCell(25, 5, utf8_decode('Precio Uni. Bs.'), 1, "C");
 $pdf->SetXY(145, 50);
@@ -214,18 +214,18 @@ foreach ($resultados as $registro) {
 
   //$pdf->SetXY(10, 58);
   $pdf->SetFont('Arial', '', 7);
-  $pdf->Cell(15, 5, $registro['cantidad'], 0, 0, 'C');
+  $pdf->Cell(10, 5, $registro['cantidad'], 0, 0, 'C');
   $pdf->SetFont('Arial', '', 6);
-  $pdf->Cell(15, 5, $registro['codigo_producto'], 0, 0, 'L');
+  $pdf->Cell(30, 5, $registro['codigo_producto'], 0, 0, 'L');
   if (strlen($registro['nombre']) > 50) {
     $pdf->SetFont('Arial', '', 6);
-    $pdf->Cell(80, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
+    $pdf->Cell(70, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
   } else if (strlen($registro['nombre']) > 60) {
     $pdf->SetFont('Arial', '', 5.5);
-    $pdf->Cell(80, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
+    $pdf->Cell(70, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
   } else {
     $pdf->SetFont('Arial', '', 7);
-    $pdf->Cell(80, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
+    $pdf->Cell(70, 5, utf8_decode($registro['nombre']), 0, 0, 'L');
   }
   $pdf->Cell(25, 5, $valorUnitario, 0, 0, 'R');
   $pdf->Cell(15, 5, $descuento_moneda, 0, 0, 'R');

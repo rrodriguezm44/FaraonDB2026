@@ -1134,7 +1134,7 @@ function fnc_ModalAumentarStock(data) {
 
   $("#titulo_modal_stock").html('Aumentar Stock'); // CAMBIAR EL TITULO DE LA VENTANA MODAL
   $("#titulo_modal_label").html('Agregar al Stock'); // CAMBIAR EL TEXTO DEL LABEL DEL INPUT PARA INGRESO DE STOCK
-  $("#iptStockSumar").attr("placeholder", "Ingrese cantidad a agregar al Stock"); //CAMBIAR EL PLACEHOLDER 
+  $("#iptStockSumar").attr("placeholder", "Cantidad a comprar"); //CAMBIAR EL PLACEHOLDER 
 
   // Los datos vienen como array: [0=control, 1=opciones, 2=id, 3=codigo, 4=descripcion, ..., 7=stock, 8=precio_compra, ...]
   var idProducto = data[2] || '';           // id del producto

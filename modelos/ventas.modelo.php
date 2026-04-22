@@ -109,7 +109,7 @@ class VentasModelo
 
             $stmt = null;
 
-            $concepto = 'VENTA';
+            $concepto = 'VENTAS';
 
             $stmt = $dbh->prepare("call prc_registrar_kardex_ventas (:codigo_producto,
                                                                      upper(:concepto),
@@ -159,12 +159,14 @@ class VentasModelo
                                             p.nombre,
                                             dv.cantidad,                            
                                             concat('Bs. ',round(dv.total_producto,2)) as precio,
-                                            v.fecha_venta
+                                            v.fecha_venta,
+                                            ci.nombre_empresa
                                             FROM detalle_ventas dv 
                                             inner join productos p on dv.codigo_producto = p.codigo_producto
                                             -- inner join ventas v on cast(v.nro_boleta as integer) = cast(dv.nro_boleta as integer)
                                             inner join ventas v on v.nro_boleta = dv.nro_boleta
                                             inner join categorias c on c.categoria_id = p.categoria_id
+                                            inner join clientes ci on v.cliente_id = ci.cliente_id
                                       where DATE(v.fecha_venta) >= date(:fechaDesde) and DATE(v.fecha_venta) <= date(:fechaHasta)
                                       order by dv.nro_boleta desc");
 
@@ -184,7 +186,7 @@ class VentasModelo
   static public function mdlObtenerVentaPorNroBoleta($nroBoleta)
   {
 
-    $stmt = Conexion::conectar()->prepare("SELECT v.nro_boleta, v.descripcion, v.total, v.cliente_id, v.observa_venta, v.fecha_entrega, v.vendedorID, v.tipoPago, v.docuVenta, v.usuarioID, v.fecha_venta, c.nombre AS nombre_cliente, u.nombre AS nombre_vendedor, tp.descripcion AS tipo_pago_desc, td.descripcion AS tipo_doc_venta FROM ventas v LEFT JOIN clientes c ON v.cliente_id = c.id LEFT JOIN usuarios u ON v.vendedorID = u.id LEFT JOIN tipo_pago tp ON v.tipoPago = tp.id LEFT JOIN tipo_documento_venta td ON v.docuVenta = td.id WHERE v.nro_boleta = :nroBoleta");
+    $stmt = Conexion::conectar()->prepare("SELECT v.nro_boleta, v.descripcion, v.total, v.cliente_id, v.observa_venta, v.fecha_entrega, v.vendedorID as vendedor_id, v.tipoPago, v.docuVenta, v.usuarioID, v.fecha_venta as fecha_e, c.nombre AS nombre_cliente, u.nombre AS nombre_vendedor, tp.descripcion AS tipo_pago_desc, td.descripcion AS tipo_doc_venta FROM ventas v LEFT JOIN clientes c ON v.cliente_id = c.id LEFT JOIN usuarios u ON v.vendedorID = u.id LEFT JOIN tipo_pago tp ON v.tipoPago = tp.id LEFT JOIN tipo_documento_venta td ON v.docuVenta = td.id WHERE v.nro_boleta = :nroBoleta");
 
     $stmt->bindParam(":nroBoleta", $nroBoleta, PDO::PARAM_STR);
 

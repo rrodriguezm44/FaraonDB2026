@@ -79,6 +79,7 @@
                   <th>Cantidad</th>
                   <th>Total Venta</th>
                   <th>Fecha Venta</th>
+                  <th>Cliente</th>
                 </tr>
               </thead>
               <tbody class="small"></tbody>
@@ -106,126 +107,129 @@
       </div>
 
       <div class="modal-body">
-        <div class="row">
-          <!-- CLIENTES -->
-          <div class="col-12 col-sm-6 col-md-3">
+        <form id="frm-datos-venta" class="needs-validation" novalidate>
+          <div class="row">
 
-            <div class="form-floating mb-2">
+            <!-- CLIENTES -->
+            <div class="col-12 col-sm-6 col-md-3">
 
-              <select class="form-select select2 fs-sm" id="selCliente" aria-label="Floating label select example" name="selCliente" required>
-              </select>
-              <label for="selCliente" class="fs-sm">Clientes</label>
-              <div class="invalid-feedback">Seleccione al Cliente</div>
+              <div class="form-floating mb-2">
 
-            </div>
+                <select class="form-select select2 fs-sm" id="selCliente" aria-label="Floating label select example" name="selCliente" required>
+                </select>
+                <label for="selCliente" class="fs-sm">Clientes</label>
+                <div class="invalid-feedback">Seleccione al Cliente</div>
 
-          </div>
-
-          <!-- SELECCIONAR VENDEDOR -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="form-floating mb-2">
-              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selVendedor"
-                name="selVendedor" required>
-                <option value="0">---Vendedores---</option>
-              </select>
-
-              <label for="selVendedor" class="fs-sm">Seleccionar Vendedor</label>
-              <div class="invalid-feedback">Seleccione al Vendedor</div>
-
-            </div>
-
-          </div>
-
-          <!-- SELECCIONAR TIPO DE DOCUMENTO -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="form-floating mb-2">
-
-              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selDocumentoVenta" name="selDocumentoVenta">
-                <option value="0" selected="true">Seleccione Documento</option>
-                <option value="1">Nota de Pago</option>
-                <option value="2">Factura</option>
-              </select>
-              <label for="selDocumentoVenta" class="fs-sm">Tipo de Documento</label>
-              <div class="invalid-feedback">Seleccione Tipo de Documento</div>
-
-            </div>
-          </div>
-
-          <!-- SELECCIONAR TIPO DE PAGO -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="form-floating mb-2">
-              <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selTipoPago" name="selTipoPago">
-                <option value="0" selected="true">Seleccione Tipo Pago</option>
-                <option value="1">Contado</option>
-                <option value="2">Credito</option>
-                <option value="3">Transferencia</option>
-              </select>
-              <label for="selTipoPago" class="fs-sm">Tipo de Pago</label>
-              <div class="invalid-feedback">Seleccione Tipo de Pago</div>
-
-            </div>
-          </div>
-
-          <!-- FECHA DE ENTREGA -->
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="input-group mb-3">
-
-              <div class="form-floating flex-grow-1">
-                <input type="text" class="form-control form-control-sm etimepicker-input fs-sm" id="iptFechaEntrega" name="iptFechaEntrega">
-                <label for="iptFechaEntrega" class="fs-sm"> Fecha Entrega</label>
-                <input type="hidden" name="codUsuario" id="codUsuario" value="<?php echo $usuarioID; ?>">
               </div>
-              <span class="input-group-text my-bg">
-                <i class=" fas fa-calendar-alt text-white fs-5" data-toggle="datetimepicker"
-                  data-target="#iptFechaEntrega"></i>
-              </span>
-            </div>
-          </div>
-          
-          <!-- INPUT OBSERVACION -->
-          <div class="col-12 col-sm-12 col-md-6">
-            <div class="form-floating mb-2">
-              <input type="text" class="form-control form-control-sm fs-sm" id="iptObservacion" name="iptObservacion"
-                placeholder="Ingrese Observacion Venta" onKeyUp="javascript:this.value=this.value.toUpperCase();">
-              <label for="iptObservacion" class="fs-sm">Observaciones </label>
-            </div>
-          </div>
 
-          <div class="col-12 col-sm-12 col-md-3">
-            <div class="form-floating mb-2">
-              <div class="form-group m-0"><a href="#" class="btn btn-success w-100 fs-sm"
-                id="btnGuardarModificacion">Guardar</a>
+            </div>
+
+            <!-- SELECCIONAR VENDEDOR -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="form-floating mb-2">
+                <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selVendedor"
+                  name="selVendedor" required>
+                  <option value="0">---Vendedores---</option>
+                </select>
+
+                <label for="selVendedor" class="fs-sm">Seleccionar Vendedor</label>
+                <div class="invalid-feedback">Seleccione al Vendedor</div>
+
+              </div>
+
+            </div>
+
+            <!-- SELECCIONAR TIPO DE DOCUMENTO -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="form-floating mb-2">
+
+                <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selDocumentoVenta" name="selDocumentoVenta">
+                  <option value="0" selected="true">Seleccione Documento</option>
+                  <option value="1">Nota de Pago</option>
+                  <option value="2">Factura</option>
+                </select>
+                <label for="selDocumentoVenta" class="fs-sm">Tipo de Documento</label>
+                <div class="invalid-feedback">Seleccione Tipo de Documento</div>
+
               </div>
             </div>
-            <!-- <button type="button" class="btn btn-primary mb-3" id="btnAgregarNuevoProducto">
-              <i class="fas fa-plus"></i> Agregar Producto
-            </button> -->
+
+            <!-- SELECCIONAR TIPO DE PAGO -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="form-floating mb-2">
+                <select class="form-select select2 fs-sm" aria-label="Floating label select example" id="selTipoPago" name="selTipoPago">
+                  <option value="0" selected="true">Seleccione Tipo Pago</option>
+                  <option value="1">Contado</option>
+                  <option value="2">Credito</option>
+                  <option value="3">Transferencia</option>
+                </select>
+                <label for="selTipoPago" class="fs-sm">Tipo de Pago</label>
+                <div class="invalid-feedback">Seleccione Tipo de Pago</div>
+
+              </div>
+            </div>
+
+            <!-- FECHA DE ENTREGA -->
+            <div class="col-12 col-sm-6 col-md-3">
+              <div class="input-group mb-3">
+
+                <div class="form-floating flex-grow-1">
+                  <input type="text" class="form-control form-control-sm etimepicker-input fs-sm" id="iptFechaEntrega" name="iptFechaEntrega">
+                  <label for="iptFechaEntrega" class="fs-sm"> Fecha Entrega</label>
+                  <input type="hidden" name="codUsuario" id="codUsuario" value="<?php echo $usuarioID; ?>">
+                </div>
+                <span class="input-group-text my-bg">
+                  <i class=" fas fa-calendar-alt text-white fs-5" data-toggle="datetimepicker"
+                    data-target="#iptFechaEntrega"></i>
+                </span>
+              </div>
+            </div>
+            
+            <!-- INPUT OBSERVACION -->
+            <div class="col-12 col-sm-12 col-md-6">
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control form-control-sm fs-sm" id="iptObservacion" name="iptObservacion"
+                  placeholder="Ingrese Observacion Venta" onKeyUp="javascript:this.value=this.value.toUpperCase();">
+                <label for="iptObservacion" class="fs-sm">Observaciones </label>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-3">
+              <div class="form-floating mb-2">
+                <div class="form-group m-0"><a href="#" class="btn btn-success w-100 fs-sm"
+                  id="btnGuardarModificacion">Guardar</a>
+                </div>
+              </div>
+              <!-- <button type="button" class="btn btn-primary mb-3" id="btnAgregarNuevoProducto">
+                <i class="fas fa-plus"></i> Agregar Producto
+              </button> -->
+            </div>
+            
+            <!-- <div class="col-md-8 d-flex flex-row align-items-center justify-content-end">
+              <div class="form-group m-0"><a href="#" class="btn btn-success" style="width:120px;"
+                  id="btnGuardarModificacion">Guardar</a></div>
+            </div> -->
           </div>
-          
-          <!-- <div class="col-md-8 d-flex flex-row align-items-center justify-content-end">
-            <div class="form-group m-0"><a href="#" class="btn btn-success" style="width:120px;"
-                id="btnGuardarModificacion">Guardar</a></div>
-          </div> -->
-        </div>
+        </form>
         <div class="table-responsive">
-        <table id="tblDetalleVenta" class="table table-bordered table-striped w-100 small">
-          <thead class="thead-light">
-            <tr>
-              <th class="text-center">Id</th>
-              <th class="text-center">Boleta</th>
-              <th class="text-center">Codigo</th>
-              <th class="d-none d-md-table-cell text-center">Categoria</th>
-              <th class="text-center">Producto</th>
-              <th class="text-center">Cantidad</th>
-              <th class="text-center">Precio</th>
-              <th class="text-center">Desc.%</th>
-              <th class="text-center">Total</th>
-              <th class="text-center">Accion</th>
-            </tr>
-          </thead>
-          <tbody id="resultv" class="small">
-          </tbody>
-        </table>
+          <table id="tblDetalleVenta" class="table table-bordered table-striped w-100 small">
+            <thead class="thead-light">
+              <tr>
+                <th class="text-center">Id</th>
+                <th class="text-center">Boleta</th>
+                <th class="text-center">Codigo</th>
+                <th class="d-none d-md-table-cell text-center">Categoria</th>
+                <th class="text-center">Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Desc.%</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Accion</th>
+              </tr>
+            </thead>
+            <tbody id="resultv" class="small">
+            </tbody>
+          </table>
         </div>
         <div class="card-footer pb-0">
           <div class="d-flex justify-content-end">
@@ -305,6 +309,7 @@
     padding: 0.25rem 0.5rem !important;
   }
 </style>
+
 <script>
   var Toast = Swal.mixin({
     toast: true,
@@ -447,7 +452,7 @@
 
             $(rows).eq(i).before(
               '<tr class="group">' +
-              '<td colspan="6" class="fs-6 fw-bold fst-italic bg-success text-white"> ' +
+              '<td colspan="7" class="fs-6 fw-bold fst-italic bg-success text-white"> ' +
               '  <i nroBoleta = ' + nroBoleta +
               ' class="fas fa-print fs-6 text-blue mx-2 btnImprimirVenta" style="cursor:pointer;" title="Imprimir Venta"> </i> <i nroBoleta = ' +
               nroBoleta +
@@ -505,6 +510,7 @@
           //window.open("extensiones/fpdf/boleta_venta.php?codigo=" + nroBoleta);
           window.open("http://localhost/faraonbd//ajax/extensiones/fpdf/boleta_venta.php?codigo=" +
             nroBoleta);
+          //window.open("https://faraonv2.infinitassoluciones.net//ajax/extensiones/fpdf/boleta_venta.php?codigo=" +nroBoleta);
         }
       })
 

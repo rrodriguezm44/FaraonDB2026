@@ -102,7 +102,7 @@ class OfertasModelo
             $stmt->bindParam(":cantidad_oferta", $cantidad_oferta, PDO::PARAM_STR);
 
             if ($stmt->execute()) {
-              $resultado = "Se registró la venta correctamente.";
+              $resultado = "Se registró la oferta correctamente.";
             } else {
               $resultado = "Error al actualizar el stock";
             }
