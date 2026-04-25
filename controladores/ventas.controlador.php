@@ -19,10 +19,10 @@ class VentasControlador
     return $productos;
   }
 
-  static public function ctrListarVentas($fechaDesde, $fechaHasta)
+  static public function ctrListarVentas($fechaDesde, $fechaHasta, $idUsuario = null, $idPerfil = null)
   {
 
-    $ventas = VentasModelo::mdlListarVentas($fechaDesde, $fechaHasta);
+    $ventas = VentasModelo::mdlListarVentas($fechaDesde, $fechaHasta, $idUsuario, $idPerfil);
 
     return $ventas;
   }

@@ -1,0 +1,88 @@
+{
+  // PHP Intelephense Configuration
+  "php.validate.enable": true,
+  "php.validate.executablePath": "C:\\xampp\\php\\php.exe",
+  "php.validate.run": "onSave",
+
+  // Intelephense Settings
+  "intelephense.enabled": true,
+  "intelephense.files.maxSize": 10000000,
+  "intelephense.environment.phpVersion": "8.0",
+  "intelephense.environment.includePaths": ["vendor"],
+  "intelephense.stubs": [
+    "apache",
+    "bcmath",
+    "Core",
+    "ctype",
+    "curl",
+    "date",
+    "dom",
+    "fileinfo",
+    "filter",
+    "ftp",
+    "gd",
+    "hash",
+    "iconv",
+    "json",
+    "libxml",
+    "mbstring",
+    "mysqli",
+    "mysqlnd",
+    "openssl",
+    "pcre",
+    "PDO",
+    "pdo_mysql",
+    "Phar",
+    "SimpleXML",
+    "soap",
+    "sockets",
+    "sodium",
+    "SPL",
+    "standard",
+    "tokenizer",
+    "xml",
+    "xmlreader",
+    "xmlwriter",
+    "zip",
+    "zlib"
+  ],
+  "intelephense.completion.insertUseDeclaration": true,
+  "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": false,
+  "intelephense.trace.server": "off",
+  "intelephense.diagnostics.undefinedTypes": true,
+  "intelephense.diagnostics.undefinedFunctions": true,
+  "intelephense.diagnostics.undefinedConstants": true,
+  "intelephense.diagnostics.undefinedMethods": true,
+  "intelephense.diagnostics.undefinedProperties": true,
+  "intelephense.diagnostics.undefinedVariables": true,
+  "intelephense.diagnostics.duplicateSymbol": true,
+  "intelephense.diagnostics.expectedParameterCount": true,
+  "intelephense.diagnostics.redundantUseStatement": true,
+
+  // Exclude vendor and other directories from indexing
+  "intelephense.files.exclude": [
+    "**/.git/**",
+    "**/.svn/**",
+    "**/.hg/**",
+    "**/.bzr/**",
+    "**/.DS_Store",
+    "**/node_modules/**",
+    "**/vendor/**"
+  ],
+
+  // Format on save
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveTimeout": 5000,
+
+  // Files associations
+  "files.associations": {
+    "*.php": "php"
+  },
+
+  // Search exclude patterns
+  "search.exclude": {
+    "**/vendor": true,
+    "**/node_modules": true,
+    "**/.git": true
+  }
+}

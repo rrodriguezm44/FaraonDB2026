@@ -21,10 +21,10 @@ class AjaxVentas
     echo json_encode($registroVenta, JSON_UNESCAPED_UNICODE);
   }
 
-  public function ajaxListarVentas($fechaDesde, $fechaHasta)
+  public function ajaxListarVentas($fechaDesde, $fechaHasta, $idUsuario = null, $idPerfil = null)
   {
 
-    $ventas = VentasControlador::ctrListarVentas($fechaDesde, $fechaHasta);
+    $ventas = VentasControlador::ctrListarVentas($fechaDesde, $fechaHasta, $idUsuario, $idPerfil);
 
     echo json_encode($ventas, JSON_UNESCAPED_UNICODE);
   }
@@ -60,8 +60,11 @@ if (isset($_POST["accion"]) && $_POST["accion"] == 1) {
   $nroBoleta->ajaxObtenerNroBoleta();
 } else if (isset($_POST["accion"]) && $_POST["accion"] == 2) { // LISTADO DE VENTAS POR RANGO DE FECHAS
 
+  $idUsuario = isset($_POST["idUsuario"]) ? $_POST["idUsuario"] : null;
+  $idPerfil = isset($_POST["idPerfil"]) ? $_POST["idPerfil"] : null;
+  
   $ventas = new AjaxVentas();
-  $ventas->ajaxListarVentas($_POST["fechaDesde"], $_POST["fechaHasta"]);
+  $ventas->ajaxListarVentas($_POST["fechaDesde"], $_POST["fechaHasta"], $idUsuario, $idPerfil);
 } else if (isset($_POST["accion"]) && $_POST["accion"] == 3) { // ELIMINAR UN AVENTA
 
   $ventas = new AjaxVentas();

@@ -148,7 +148,7 @@ class VentasModelo
     }
   }
 
-  static public function mdlListarVentas($fechaDesde, $fechaHasta)
+  static public function mdlListarVentas($fechaDesde, $fechaHasta, $idUsuario = null, $idPerfil = null)
   {
 
     try {
@@ -168,10 +168,15 @@ class VentasModelo
                                             inner join categorias c on c.categoria_id = p.categoria_id
                                             inner join clientes ci on v.cliente_id = ci.cliente_id
                                       where DATE(v.fecha_venta) >= date(:fechaDesde) and DATE(v.fecha_venta) <= date(:fechaHasta)
+                                      " . ($idPerfil == 2 ? "AND v.usuarioID = :idUsuario" : "") . "
                                       order by dv.nro_boleta desc");
 
       $stmt->bindParam(":fechaDesde", $fechaDesde, PDO::PARAM_STR);
       $stmt->bindParam(":fechaHasta", $fechaHasta, PDO::PARAM_STR);
+      
+      if ($idPerfil == 2) {
+        $stmt->bindParam(":idUsuario", $idUsuario, PDO::PARAM_INT);
+      }
 
       $stmt->execute();
 
