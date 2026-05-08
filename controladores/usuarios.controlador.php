@@ -29,11 +29,7 @@ class UsuarioControlador
         echo '
             <script>
 
-              fncSweetAlert{
-                "error",
-                "Usuario y/o contraseña invalida",
-                "http://localhost/faraondb/"
-              };  
+              fncSweetAlert("error", "Usuario y/o contraseña invalida", "http://localhost/faraonbd/")
             
 
             </script>

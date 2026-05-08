@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <style>
   body {
@@ -164,8 +166,53 @@
 
   <!-- Materialize JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
   <script>
+  function fncSweetAlert(type, text, url) {
+    switch (type) {
+      case "error":
+        if (url == null) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: text,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: text,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location = url;
+            }
+          });
+        }
+        break;
+      case "success":
+        if (url == null) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: text,
+          });
+        } else {
+          Swal.fire({
+            icon: "success",
+            title: "Confirmación",
+            text: text,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location = url;
+            }
+          });
+        }
+        break;
+    }
+  }
+
   // Initialize Materialize components
   document.addEventListener('DOMContentLoaded', function() {
     // Auto-focus on username field
@@ -173,6 +220,34 @@
     if (usernameField) {
       usernameField.focus();
     }
+
+    // Form validation
+    var form = document.querySelector('.needs-validation-login');
+    form.addEventListener('submit', function(event) {
+      var usuario = document.getElementById('loginUsuario').value.trim();
+      var password = document.getElementById('loginPassword').value.trim();
+      var isValid = true;
+
+      // Hide all invalid feedbacks
+      var feedbacks = form.querySelectorAll('.invalid-feedback');
+      feedbacks.forEach(function(fb) {
+        fb.style.display = 'none';
+      });
+
+      if (usuario === '') {
+        document.querySelector('#loginUsuario + .invalid-feedback').style.display = 'block';
+        isValid = false;
+      }
+      if (password === '') {
+        document.querySelector('#loginPassword + .invalid-feedback').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
   });
   </script>
 </body>
