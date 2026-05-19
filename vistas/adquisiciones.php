@@ -54,12 +54,17 @@ if (isset($_SESSION['usuario'])) {
 
               <div class="form-floating mb-2">
 
-                <select class="form-select select2" id="selCliente" aria-label="Floating label select example" name="selCliente" required>
+                <select class="form-select select2" id="selCliente" aria-label="Floating label select example"
+                  name="selCliente" required>
                 </select>
                 <label for="selCliente">Clientes</label>
                 <div class="invalid-feedback">Seleccione al Cliente</div>
 
               </div>
+
+              <button type="button" class="btn btn-primary btn-sm" id="btnNuevoClienteAdquisicion">
+                <i class="fas fa-plus"></i> Nuevo Cliente
+              </button>
 
             </div>
 
@@ -67,7 +72,8 @@ if (isset($_SESSION['usuario'])) {
             <div class="col-12 col-md-7 col-lg-3">
               <div class="form-floating mb-2">
 
-                <select class="form-select select2" aria-label="Floating label select example" id="selDocumentoVenta" name="selDocumentoVenta">
+                <select class="form-select select2" aria-label="Floating label select example" id="selDocumentoVenta"
+                  name="selDocumentoVenta">
                   <option value="0" selected="true">Seleccione Documento</option>
                   <option value="1">Nota de Pago</option>
                   <option value="2">Factura</option>
@@ -81,7 +87,8 @@ if (isset($_SESSION['usuario'])) {
             <!-- SELECCIONAR TIPO DE PAGO -->
             <div class="col-12 col-md-7 col-lg-3">
               <div class="form-floating mb-2">
-                <select class="form-select select2" aria-label="Floating label select example" id="selTipoPago" name="selTipoPago">
+                <select class="form-select select2" aria-label="Floating label select example" id="selTipoPago"
+                  name="selTipoPago">
                   <option value="0" selected="true">Seleccione Tipo Pago</option>
                   <option value="1">Contado</option>
                   <option value="2">Credito</option>
@@ -96,22 +103,23 @@ if (isset($_SESSION['usuario'])) {
             <!-- SELECCIONAR VENDEDOR -->
             <div class="col-12 col-md-7 col-lg-3">
               <?php if ($perfil_usuario == 2): ?>
-                <!-- Si el perfil es vendedor (2), mostrar nombre directamente -->
-                <div class="form-floating mb-2">
-                  <input type="text" class="form-control" id="selVendedorDisplay" value="<?php echo htmlspecialchars($nombre_usuario . ' ' . $apellido_usuario); ?>" readonly>
-                  <input type="hidden" name="selVendedor" id="selVendedor" value="<?php echo $usuarioID; ?>">
-                  <label for="selVendedorDisplay">Vendedor</label>
-                </div>
+              <!-- Si el perfil es vendedor (2), mostrar nombre directamente -->
+              <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="selVendedorDisplay"
+                  value="<?php echo htmlspecialchars($nombre_usuario . ' ' . $apellido_usuario); ?>" readonly>
+                <input type="hidden" name="selVendedor" id="selVendedor" value="<?php echo $usuarioID; ?>">
+                <label for="selVendedorDisplay">Vendedor</label>
+              </div>
               <?php else: ?>
-                <!-- Si el perfil no es vendedor, mostrar select para elegir vendedor -->
-                <div class="form-floating mb-2">
-                  <select class="form-select select2" aria-label="Floating label select example" id="selVendedor"
-                    name="selVendedor" required>
-                    <option value="0">---Vendedores---</option>
-                  </select>
-                  <label for="selVendedor">Seleccionar Vendedor</label>
-                  <div class="invalid-feedback">Seleccione al Vendedor</div>
-                </div>
+              <!-- Si el perfil no es vendedor, mostrar select para elegir vendedor -->
+              <div class="form-floating mb-2">
+                <select class="form-select select2" aria-label="Floating label select example" id="selVendedor"
+                  name="selVendedor" required>
+                  <option value="0">---Vendedores---</option>
+                </select>
+                <label for="selVendedor">Seleccionar Vendedor</label>
+                <div class="invalid-feedback">Seleccione al Vendedor</div>
+              </div>
               <?php endif; ?>
             </div>
 
@@ -121,7 +129,8 @@ if (isset($_SESSION['usuario'])) {
               <div class="input-group mb-3">
 
                 <div class="form-floating flex-grow-1">
-                  <input type="text" class="form-control form-control-sm etimepicker-input" id="iptFechaEntrega" name="iptFechaEntrega">
+                  <input type="text" class="form-control form-control-sm etimepicker-input" id="iptFechaEntrega"
+                    name="iptFechaEntrega">
                   <label for="iptFechaEntrega"> Fecha Entrega</label>
                   <input type="hidden" name="codUsuario" id="codUsuario" value="<?php echo $usuarioID; ?>">
                 </div>
@@ -370,758 +379,996 @@ MODAL LISTADO DE PRODUCTOS PARA ELEGIR AL MOMENTO DE LA VENTA
 </div>
 <!-- /. End -->
 
+<!-- Modal Registro/Modificacion Clientes -->
+<div class="modal fade" id="modalCliente" tabindex="-1" role="dialog" aria-labelledby="modalClienteLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="modalClienteLabel">
+          <i class="fas fa-user-plus"></i> Registro/Modificación de Clientes
+        </h5>
+        <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="needs-validation" novalidate>
+          <div class="row">
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptFecha">
+                  <i class="fas fa-calendar fs-6"></i>
+                  <span class="small">Fecha Registro</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptFecha" value="" readonly>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptSelCategoria">
+                  <i class="fas fa-check fs-6"></i>
+                  <span class="small">Categoria</span><span class="text-danger">*</span>
+                </label>
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="iptSelCategoria"
+                  required>
+                  <option value="" selected="true">Seleccione Categoria</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                </select>
+                <div class="invalid-feedback">Debe ingresar Categoria</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptRazonSocial">
+                  <i class="fas fa-building f-6"></i>
+                  <span class="small">Razon Social</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptRazonSocial" name="iptRazonSocial"
+                  placeholder="Ingrese la Razon Social" onKeyUp="javascript:this.value=this.value.toUpperCase();"
+                  required>
+                <div class="invalid-feedback">Debe ingresar la Razon Social</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptNitEmpresa">
+                  <i class="fas fa-id-card f-6"></i>
+                  <span class="small">Nit Empresa</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptNitEmpresa" name="iptNitEmpresa"
+                  placeholder="Ingrese Nit de la Empresa" required>
+                <div class="invalid-feedback">Debe ingresar la Nit de la Empresa</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptNombreEmpresa">
+                  <i class="fas fa-user f-6"></i>
+                  <span class="small">Nombre Cliente</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptNombreEmpresa" name="iptNombreEmpresa"
+                  placeholder="Ingrese Nombre de la Empresa" onKeyUp="javascript:this.value=this.value.toUpperCase();"
+                  required>
+                <div class="invalid-feedback">Debe ingresar la Nombre del Cliente</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptNumeroFono">
+                  <i class="fas fa-phone f-6"></i>
+                  <span class="small">Numero Telefono</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptNumeroFono" name="iptNumeroFono"
+                  placeholder="Ingrese Numero de Telefono" required>
+                <div class="invalid-feedback">Debe ingresar Numero Telefono</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptDireccion">
+                  <i class="fas fa-map-marker f-6"></i>
+                  <span class="small">Direccion</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptDireccion" name="iptDireccion"
+                  placeholder="Ingrese la Direccion" onKeyUp="javascript:this.value=this.value.toUpperCase();" required>
+                <div class="invalid-feedback">Debe ingresar la Direccion</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptZona">
+                  <i class="fas fa-map-marker f-6"></i>
+                  <span class="small">Zona</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptZona" name="iptZona"
+                  placeholder="Ingrese la Zona" onKeyUp="javascript:this.value=this.value.toUpperCase();" required>
+                <div class="invalid-feedback">Debe ingresar la Zona</div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group mb-3">
+                <label class="col-form-label" for="iptTipoEmpresa">
+                  <i class="fas fa-bars f-6"></i>
+                  <span class="small">Tipo Empresa</span><span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control form-control-sm" id="iptTipoEmpresa" name="iptTipoEmpresa"
+                  placeholder="Ingrese Tipo Empresa" onKeyUp="javascript:this.value=this.value.toUpperCase();" required>
+                <div class="invalid-feedback">Debe ingresar el Tipo</div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" id="btnRegistrarCliente">
+          <i class="fas fa-save"></i> Guardar Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-  var itemProducto = 1;
-  $(document).ready(function() {
+var itemProducto = 1;
+var Toast = Swal.mixin({
+  toast: true,
+  position: 'top',
+  showConfirmButton: false,
+  timer: 3000
+});
+$(document).ready(function() {
 
-    fnc_CargarDataTableListadoProductos(); //listado de productos elegidos
-    fnc_CargarDataTableProductos(); //productos por elegir
+  fnc_CargarDataTableListadoProductos(); //listado de productos elegidos
+  // fnc_CargarDataTableProductos(); //productos por elegir
 
-    $('#selCliente').select2({ width : 'resolve'}); // Inicializamos Select2 para el campo cliente
-    <?php if ($perfil_usuario != 2): ?>
-    $('#selVendedor').select2({ width : 'resolve'}); // Inicializamos Select2 para el campo vendedor solo si no es vendedor
-    <?php endif; ?>
+  $('#selCliente').select2({
+    width: 'resolve'
+  }); // Inicializamos Select2 para el campo cliente
+  <?php if ($perfil_usuario != 2): ?>
+  $('#selVendedor').select2({
+    width: 'resolve'
+  }); // Inicializamos Select2 para el campo vendedor solo si no es vendedor
+  <?php endif; ?>
 
-    $('#iptFechaEntrega').datetimepicker({
-      format: 'YYYY-MM-DD',
-      locale: moment.lang('es', {
-        months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'
-          .split('_'),
-        monthsShort: 'Enero._Feb._Mar_Abr._May_Jun_Jul._Ago_Sept._Oct._Nov._Dec.'.split(
-          '_'),
-        weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
-        weekdaysShort: 'Dom._Lun._Mar._Mier._Jue._Vier._Sab.'.split('_'),
-        weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_')
-      }),
-      defaultDate: moment(),
-    });
+  $('#iptFechaEntrega').datetimepicker({
+    format: 'YYYY-MM-DD',
+    locale: moment.lang('es', {
+      months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'
+        .split('_'),
+      monthsShort: 'Enero._Feb._Mar_Abr._May_Jun_Jul._Ago_Sept._Oct._Nov._Dec.'.split(
+        '_'),
+      weekdays: 'Domingo_Lunes_Martes_Miercoles_Jueves_Viernes_Sabado'.split('_'),
+      weekdaysShort: 'Dom._Lun._Mar._Mier._Jue._Vier._Sab.'.split('_'),
+      weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_')
+    }),
+    defaultDate: moment(),
+  });
 
-    CargarNroBoleta();
+  CargarNroBoleta();
 
-    //MOSTRANDO DATOS DE CLIENTES
-    $.post("ajax/busca_cliente.php", function(data) {
-      $("#selCliente").html(data);
-    });
-    //MOSTRANDO DATOS DEL VENDEDOR - solo si el usuario no es vendedor (perfil != 2)
-    <?php if ($perfil_usuario != 2): ?>
-    $.post("ajax/busca_vendedor.php", function(data) {
-      $("#selVendedor").html(data);
-    });
-    <?php endif; ?>
+  //MOSTRANDO DATOS DE CLIENTES
+  $.post("ajax/busca_cliente.php", function(data) {
+    $("#selCliente").html(data);
+  });
+  //MOSTRANDO DATOS DEL VENDEDOR - solo si el usuario no es vendedor (perfil != 2)
+  <?php if ($perfil_usuario != 2): ?>
+  $.post("ajax/busca_vendedor.php", function(data) {
+    $("#selVendedor").html(data);
+  });
+  <?php endif; ?>
 
-    /* ======================================================================================
-    EVENTO PARA MODIFICAR LA CANTIDAD DEL PRODUCTOS A COMPRAR
-    ======================================================================================*/
-    $('#tbl_ListadoProductos tbody').on('change', '.iptCantidad', function() {
+  // Cliente modal variables
+  var idCliente = 0;
 
-      cantidad_actual = $(this)[0]['value'];
-      cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
+  // Reset form when modal is hidden
+  $('#modalCliente').on('hidden.bs.modal', function() {
+    idCliente = 0;
+    $("#iptRazonSocial").val("");
+    $("#iptNitEmpresa").val("");
+    $("#iptNombreEmpresa").val("");
+    $("#iptNumeroFono").val("");
+    $("#iptDireccion").val("");
+    $("#iptZona").val("");
+    $("#iptTipoEmpresa").val("");
+    $("#iptFecha").val("");
+    $("#iptSelCategoria").val("");
+    $(".needs-validation").removeClass("was-validated");
+  });
 
+  // Open modal for new client
+  $('#btnNuevoClienteAdquisicion').on('click', function() {
+    idCliente = 0;
+    $("#iptRazonSocial").val("");
+    $("#iptNitEmpresa").val("");
+    $("#iptNombreEmpresa").val("");
+    $("#iptNumeroFono").val("");
+    $("#iptDireccion").val("");
+    $("#iptZona").val("");
+    $("#iptTipoEmpresa").val("");
+    $("#iptFecha").val(new Date().toLocaleDateString());
+    $("#iptSelCategoria").val("");
+    $('#modalCliente').modal('show');
+  });
 
-      $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-
-        var row = $('#tbl_ListadoProductos').DataTable().row(index);
-
-        var data = row.data();
-
-        if (data['codigo_producto'] == cod_producto_actual) {
-
-          // cantidad_actual
-          $('#tbl_ListadoProductos').DataTable().cell(index, 4).data(cantidad_actual)
-
-        }
-      })
-
-      fnc_ActualizarDatos();
-
-    })
-
-    /* ======================================================================================
-    EVENTO PARA MODIFICAR EL COSTO UNITARIO DEL PRODUCTO A COMPRAR
-    ======================================================================================*/
-    $('#tbl_ListadoProductos tbody').on('change', '.iptCostoUnitario', function() {
-
-      $costo_actual = $(this)[0]['value'];
-      $cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
-
-
-      $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-
-        var row = $('#tbl_ListadoProductos').DataTable().row(index);
-
-        var data = row.data();
-
-        if (data['codigo_producto'] == $cod_producto_actual) {
-
-          $('#tbl_ListadoProductos').DataTable().cell(index, 6).data($costo_actual)
-
-          // // obtener cantidad
-          // $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
-
-        }
-      })
-
-      fnc_ActualizarDatos();
-
-    })
-
-    /* ======================================================================================
-    EVENTO PARA MODIFICAR EL DESCUENTO DEL PRODUCTOS A COMPRAR
-    ======================================================================================*/
-    $('#tbl_ListadoProductos tbody').on('change', '.iptDescuento', function() {
-
-      $descuento_actual = $(this)[0]['value'];
-      $cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
-
-      $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-
-        var row = $('#tbl_ListadoProductos').DataTable().row(index);
-
-        var data = row.data();
-
-        if (data['codigo_producto'] == $cod_producto_actual) {
-
-          $('#tbl_ListadoProductos').DataTable().cell(index, 8).data($descuento_actual)
-
-          // // obtener cantidad
-          // $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
-
-          // //obtener costo unitario
-          // $costo_unitario = $('#tbl_ListadoProductos').DataTable().cell(index, 6).data()
-
-        }
-      })
-
-      fnc_ActualizarDatos();
-
-    })
-
-    $('#tbl_productos tbody').on('click', '.btnSeleccionarProducto', function() {
-      fnc_SeleccionarProducto($("#tbl_productos").DataTable().row($(this).parents('tr')).data());
-    })
-
-    $(".btnBuscarProducto").on('click', function() {
-      fnc_CargarDataTableProductos();
-      $("#mdlListadoProductos").modal('show');
-    })
-
-    $("#btnCancelarCompra").on('click', function() {
-      fnc_LimpiarFomulario();
-    });
-
-    $("#btnGuardarCompra").on('click', function() {
-      fnc_GuardarCompra();
-    })
-
-    /* =======================================================================================
-      EVENTO QUE PERMITE CHECKEAR EL EFECTIVO CUANDO ES EXACTO
-      =========================================================================================*/
-    $("#chkEfectivoExacto").change(function() {
-
-      if ($("#chkEfectivoExacto").is(':checked')) {
-
-        var vuelto = 0;
-        //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
-        var totalVenta = $("#resumen_total_venta").html();
-
-        $("#iptEfectivoRecibido").val(totalVenta);
-
-        $("#EfectivoEntregado").html(totalVenta);
-
-        //var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html().replace("Bs. ", ""));
-        var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html());
-
-        vuelto = parseFloat(totalVenta) - parseFloat(EfectivoRecibido);
-
-        $("#Vuelto").html(vuelto.toFixed(2));
-
-      } else {
-
-        $("#iptEfectivoRecibido").val("")
-        $("#EfectivoEntregado").html("0.00");
-        $("#Vuelto").html("0.00");
-
-      }
-    })
-
-    /* ======================================================================================
-    EVENTO QUE SE DISPARA AL DIGITAR EL MONTO EN EFECTIVO ENTREGADO POR EL CLIENTE
-    =========================================================================================*/
-    $("#iptEfectivoRecibido").keyup(function() {
-      actualizarVuelto();
-    });
-
-    /* ======================================================================================
-  EVENTO PARA ELIMINAR UN PRODUCTO DEL LISTADO
-  ======================================================================================*/
-    $('#tbl_ListadoProductos tbody').on('click', '.btnEliminarproducto', function() {
-      $('#tbl_ListadoProductos').DataTable().row($(this).parents('tr')).remove().draw();
-      fnc_ActualizarDatos();
-    });
-
-  }); //fin document ready
-
-  /*===================================================================*/
-  // C O N S U L T A   D E   P R O D U C T O S  (DATATABLE)
-  /*===================================================================*/
-  function fnc_CargarDataTableProductos() {
-
-    //alert("dentro la funcion busqueda productos");
-
-    if ($.fn.DataTable.isDataTable('#tbl_productos')) {
-      $('#tbl_productos').DataTable().destroy();
-      $('#tbl_productos tbody').empty();
+  // Register client
+  $('#btnRegistrarCliente').on('click', function() {
+    // Validation
+    var form = document.querySelector('.needs-validation');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
     }
 
-    $("#tbl_productos").DataTable({
-      dom: 'Bfrtip',
-      buttons: [{
-          text: '<i class="fas fa-plus me-2"></i>Agregar Producto',
-          className: 'btn btn-success btn-sm fw-bold rounded-pill addNewRecord',
-          action: function(e, dt, node, config) {
-            $("#mdlGestionarProducto").modal('show')
-          }
-        },
-        {
-          extend: 'pageLength',
-          className: 'btn btn-info btn-sm fw-bold rounded-pill'
+    // Collect data
+    var datos = {
+      'idCliente': idCliente,
+      'razonSocial': $("#iptRazonSocial").val(),
+      'nitEmpresa': $("#iptNitEmpresa").val(),
+      'nombreEmpresa': $("#iptNombreEmpresa").val(),
+      'telefono': $("#iptNumeroFono").val(),
+      'direccion': $("#iptDireccion").val(),
+      'zona': $("#iptZona").val(),
+      'tipoEmpresa': $("#iptTipoEmpresa").val(),
+      'categoria': $("#iptSelCategoria").val()
+    };
+
+    $.ajax({
+      url: "ajax/clientes.ajax.php",
+      method: "POST",
+      data: datos,
+      dataType: 'json',
+      success: function(respuesta) {
+        if (respuesta == "ok") {
+          Toast.fire({
+            icon: 'success',
+            title: idCliente == 0 ? 'Cliente registrado correctamente' :
+              'Cliente actualizado correctamente'
+          });
+          $('#modalCliente').modal('hide');
+          // Reload clients
+          $.post("ajax/busca_cliente.php", function(data) {
+            $("#selCliente").html(data);
+          });
+        } else {
+          Toast.fire({
+            icon: 'error',
+            title: 'Error al registrar cliente'
+          });
         }
-      ],
-      pageLength: [5, 10, 15, 30, 50, 100],
-      pageLength: 10,
-      ajax: {
-        url: "ajax/productos_inventario.ajax.php",
-        dataSrc: '',
-        type: "POST",
-        data: {
-          'accion': 'listar_productos'
-        },
-      },
-      scrollX: true,
-      autoWidth: true,
-      responsive: {
-        details: {
-          type: 'column'
-        }
-      },
-      columnDefs: [{
-          targets: 0,
-          orderable: false,
-          className: 'control'
-        },
-        {
-          targets: [0, 2, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-          visible: false
-        },
-        {
-          targets: 1,
-          orderable: false,
-          className: 'text-center',
-          createdCell: function(td, cellData, rowData, row, col) {
-            $(td).html(
-              "<span class='btnSeleccionarProducto' style='cursor:pointer; padding: 5px 10px; border-radius: 5px; transition: all 0.3s ease;'>" +
-              "<i class='fas fa-check-circle fs-5 text-success'></i>" +
-              "</span>")
-          }
-        }
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-      },
-      createdRow: function(row, data, dataIndex) {
-        $(row).css('vertical-align', 'middle');
-      },
-      initComplete: function(settings, json) {
-        // Mejorar botones de DataTables
-        $('.dt-buttons').addClass('mb-3 d-flex gap-2');
-        if (!$("#mdlListadoProductos").hasClass('show')) {
-          $("#mdlListadoProductos").modal('show');
-        }
+      }
+    });
+  });
+
+  /* ======================================================================================
+  EVENTO PARA MODIFICAR LA CANTIDAD DEL PRODUCTOS A COMPRAR
+  ======================================================================================*/
+  $('#tbl_ListadoProductos tbody').on('change', '.iptCantidad', function() {
+
+    cantidad_actual = $(this)[0]['value'];
+    cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
+
+
+    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
+
+      var row = $('#tbl_ListadoProductos').DataTable().row(index);
+
+      var data = row.data();
+
+      if (data['codigo_producto'] == cod_producto_actual) {
+
+        // cantidad_actual
+        $('#tbl_ListadoProductos').DataTable().cell(index, 4).data(cantidad_actual)
+
       }
     })
 
-    ajustarHeadersDataTables($("#tbl_productos"))
+    fnc_ActualizarDatos();
 
-  }
+  })
 
-  function ajustarHeadersDataTables(element) {
+  /* ======================================================================================
+  EVENTO PARA MODIFICAR EL COSTO UNITARIO DEL PRODUCTO A COMPRAR
+  ======================================================================================*/
+  $('#tbl_ListadoProductos tbody').on('change', '.iptCostoUnitario', function() {
 
-    var observer = window.ResizeObserver ? new ResizeObserver(function(entries) {
-      entries.forEach(function(entry) {
-        $(entry.target).DataTable().columns.adjust();
-      });
-    }) : null;
+    $costo_actual = $(this)[0]['value'];
+    $cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
 
-    // Function to add a datatable to the ResizeObserver entries array
-    resizeHandler = function($table) {
-      if (observer)
-        observer.observe($table[0]);
-    };
 
-    // Initiate additional resize handling on datatable
-    resizeHandler(element);
+    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
 
-  }
+      var row = $('#tbl_ListadoProductos').DataTable().row(index);
 
-  /*===================================================================*/
-  //FUNCION PARA CARGAR EL NRO DE BOLETA
-  /*===================================================================*/
-  function CargarNroBoleta() {
+      var data = row.data();
 
-    $.ajax({
-      async: false,
-      url: "ajax/ventas.ajax.php",
-      method: "POST",
-      data: {
-        'accion': 1
-      },
-      dataType: 'json',
-      success: function(respuesta) {
+      if (data['codigo_producto'] == $cod_producto_actual) {
 
-        serie_boleta = respuesta["serie_boleta"];
-        nro_boleta = respuesta["nro_venta"];
+        $('#tbl_ListadoProductos').DataTable().cell(index, 6).data($costo_actual)
 
-        //$("#iptNroSerie").val(serie_boleta);
-        $("#iptNroVenta").val(nro_boleta);
+        // // obtener cantidad
+        // $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
+
       }
-    });
-  }
+    })
 
-  /*===================================================================*/
-  //FUNCION PARA ACTUALIZAR EL VUELTO
-  /*===================================================================*/
-  function actualizarVuelto() {
+    fnc_ActualizarDatos();
 
-    //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
-    var totalVenta = $("#resumen_total_venta").html();
+  })
 
-    $("#chkEfectivoExacto").prop('checked', false);
+  /* ======================================================================================
+  EVENTO PARA MODIFICAR EL DESCUENTO DEL PRODUCTOS A COMPRAR
+  ======================================================================================*/
+  $('#tbl_ListadoProductos tbody').on('change', '.iptDescuento', function() {
 
-    var efectivoRecibido = $("#iptEfectivoRecibido").val();
+    $descuento_actual = $(this)[0]['value'];
+    $cod_producto_actual = $(this)[0]['attributes']['codigoproducto']['value'];
 
-    if (efectivoRecibido > 0) {
+    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
 
-      $("#EfectivoEntregado").html(parseFloat(efectivoRecibido).toFixed(2));
+      var row = $('#tbl_ListadoProductos').DataTable().row(index);
 
-      vuelto = parseFloat(efectivoRecibido) - parseFloat(totalVenta);
+      var data = row.data();
 
-      $("#Vuelto").html(parseFloat(vuelto).toFixed(2));
+      if (data['codigo_producto'] == $cod_producto_actual) {
+
+        $('#tbl_ListadoProductos').DataTable().cell(index, 8).data($descuento_actual)
+
+        // // obtener cantidad
+        // $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
+
+        // //obtener costo unitario
+        // $costo_unitario = $('#tbl_ListadoProductos').DataTable().cell(index, 6).data()
+
+      }
+    })
+
+    fnc_ActualizarDatos();
+
+  })
+
+  $('#tbl_productos tbody').on('click', '.btnSeleccionarProducto', function() {
+    fnc_SeleccionarProducto($("#tbl_productos").DataTable().row($(this).parents('tr')).data());
+  })
+
+  $(".btnBuscarProducto").on('click', function() {
+    fnc_CargarDataTableProductos();
+    $("#mdlListadoProductos").modal('show');
+  })
+
+  $("#btnCancelarCompra").on('click', function() {
+    fnc_LimpiarFomulario();
+  });
+
+  $("#btnGuardarCompra").on('click', function() {
+    fnc_GuardarCompra();
+  })
+
+  /* =======================================================================================
+    EVENTO QUE PERMITE CHECKEAR EL EFECTIVO CUANDO ES EXACTO
+    =========================================================================================*/
+  $("#chkEfectivoExacto").change(function() {
+
+    if ($("#chkEfectivoExacto").is(':checked')) {
+
+      var vuelto = 0;
+      //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+      var totalVenta = $("#resumen_total_venta").html();
+
+      $("#iptEfectivoRecibido").val(totalVenta);
+
+      $("#EfectivoEntregado").html(totalVenta);
+
+      //var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html().replace("Bs. ", ""));
+      var EfectivoRecibido = parseFloat($("#EfectivoEntregado").html());
+
+      vuelto = parseFloat(totalVenta) - parseFloat(EfectivoRecibido);
+
+      $("#Vuelto").html(vuelto.toFixed(2));
 
     } else {
 
+      $("#iptEfectivoRecibido").val("")
       $("#EfectivoEntregado").html("0.00");
       $("#Vuelto").html("0.00");
 
     }
+  })
+
+  /* ======================================================================================
+  EVENTO QUE SE DISPARA AL DIGITAR EL MONTO EN EFECTIVO ENTREGADO POR EL CLIENTE
+  =========================================================================================*/
+  $("#iptEfectivoRecibido").keyup(function() {
+    actualizarVuelto();
+  });
+
+  /* ======================================================================================
+  EVENTO PARA ELIMINAR UN PRODUCTO DEL LISTADO
+  ======================================================================================*/
+  $('#tbl_ListadoProductos tbody').on('click', '.btnEliminarproducto', function() {
+    $('#tbl_ListadoProductos').DataTable().row($(this).parents('tr')).remove().draw();
+    fnc_ActualizarDatos();
+  });
+
+}); //fin document ready
+
+/*===================================================================*/
+// C O N S U L T A   D E   P R O D U C T O S  (DATATABLE)
+/*===================================================================*/
+function fnc_CargarDataTableProductos() {
+
+  //alert("dentro la funcion busqueda productos");
+
+  if ($.fn.DataTable.isDataTable('#tbl_productos')) {
+    $('#tbl_productos').DataTable().destroy();
+    $('#tbl_productos tbody').empty();
   }
 
-  /*===================================================================*/
-  //CARGAR DATATABLE DE PRODUCTOS A COMPRAR
-  /*===================================================================*/
-  function fnc_CargarDataTableListadoProductos() {
-
-    if ($.fn.DataTable.isDataTable('#tbl_ListadoProductos')) {
-      $('#tbl_ListadoProductos').DataTable().destroy();
-      $('#tbl_ListadoProductos tbody').empty();
-    }
-
-    $('#tbl_ListadoProductos').DataTable({
-      dom: 'Bfrtip',
-      buttons: ['pageLength'],
-      pageLength: [5, 10, 15, 30, 50, 100],
-      pageLength: 10,
-      columnDefs: [{
-          targets: [4, 6, 8],
-          visible: false
-        },
-        {
-          targets: [0],
-          orderable: false
+  $("#tbl_productos").DataTable({
+    dom: 'Bfrtip',
+    buttons: [{
+        text: '<i class="fas fa-plus me-2"></i>Agregar Producto',
+        className: 'btn btn-success btn-sm fw-bold rounded-pill addNewRecord',
+        action: function(e, dt, node, config) {
+          $("#mdlGestionarProducto").modal('show')
         }
-      ],
-
-      "columns": [{
-          "data": "acciones"
-        },
-        {
-          "data": "producto"
-        },
-        {
-          "data": "codigo_producto"
-        },
-        {
-          "data": "cantidad"
-        },
-        {
-          "data": "cantidad_temp"
-        },
-        {
-          "data": "precio_venta"
-        },
-        {
-          "data": "precio_venta_temp"
-        },
-        {
-          "data": "descuento"
-        },
-        {
-          "data": "descuento_temp"
-        },
-        {
-          "data": "subTotal"
-        },
-        {
-          "data": "total"
-        }
-      ],
-      // "order": [
-      //     [1, 'desc']
-      // ],
-
-      fixedColumns: {
-        left: 2,
-        right: 1
       },
-      scrollX: true,
-      "language": {
-        "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+      {
+        extend: 'pageLength',
+        className: 'btn btn-info btn-sm fw-bold rounded-pill'
       }
-    });
-
-    //ajustarHeadersDataTables($("#tbl_ListadoProductos"))
-  }
-
-  function CargarProductos(producto = "") {
-
-    /*===================================================================*/
-    // AUMENTAMOS LA CANTIDAD SI EL PRODUCTO YA EXISTE EN EL LISTADO
-    /*===================================================================*/
-    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-
-      var row = $('#tbl_ListadoProductos').DataTable().row(index);
-      var data = row.data();
-
-      if (producto == data['codigo_producto']) {
-        mensajeToast("warning", "El producto ya fue agregado al listado");
-        exit;
-      }
-    })
-
-
-    $.ajax({
+    ],
+    pageLength: [5, 10, 15, 30, 50, 100],
+    pageLength: 10,
+    ajax: {
       url: "ajax/productos_inventario.ajax.php",
-      method: "POST",
+      dataSrc: '',
+      type: "POST",
       data: {
-        'accion': 'obtener_producto', //BUSCAR PRODUCTOS POR SU CODIGO DE BARRAS
-        'codigo_producto': producto
+        'accion': 'listar_productos'
       },
-      dataType: 'json',
-      success: function(respuesta) {
-
-        /*===================================================================*/
-        //SI LA RESPUESTA ES VERDADERO, TRAE ALGUN DATO
-        /*===================================================================*/
-        if (respuesta) {
-
-          $('#tbl_ListadoProductos').DataTable().row.add({
-            'acciones': "<center>" +
-              "<span class='btnEliminarproducto text-danger px-1'style='cursor:pointer;' data-bs-toggle='tooltip' data-bs-placement='top' title='Eliminar producto'> " +
-              "<i class='fas fa-trash fs-6'> </i> " +
-              "</span>" +
-              "</center>",
-            'producto': respuesta['nombre'],
-            'codigo_producto': respuesta['codigo_producto'],
-            'cantidad': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
-              respuesta['codigo_producto'] +
-              '" class="form-control text-center iptCantidad p-0 m-0 px-2" value="1">',
-            'cantidad_temp': 1,
-            'precio_venta': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
-              respuesta['codigo_producto'] +
-              '" class="form-control text-center iptCostoUnitario p-0 m-0 px-2" value="' +
-              respuesta['precio_venta'] + '">',
-            'precio_venta_temp': respuesta['precio_venta'],
-            'descuento': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
-              respuesta['codigo_producto'] +
-              '" class="form-control text-center iptDescuento p-0 m-0 px-2" value="' +
-              respuesta['descuento'] + '">',
-            'descuento_temp': respuesta['descuento'],
-            'subTotal': 0,
-            'total': 0
-
-
-          }).draw();
-
-          fnc_ActualizarDatos();
-          mensajeToast("success", "Producto agregado")
-
-        } else {
-          mensajeToast('error', 'EL PRODUCTO NO EXISTE O NO TIENE STOCK');
-        }
-
+    },
+    scrollX: true,
+    autoWidth: true,
+    responsive: {
+      details: {
+        type: 'column'
       }
-    });
-  }
-
-  /*==========================================================================================================================================
-  L I M P I A R   I N P U T 'S   D E L   F O R M U L A R I O
-  *=========================================================================================================================================*/
-  function fnc_LimpiarFomulario() {
-
-    // LIMPIAR MENSAJES DE VALIDACIÓN
-    $(".needs-validation-registro-compras").removeClass("was-validated");
-    $(".form-floating").removeClass("was-validated");
-
-    // RESETEAR TODOS LOS INPUTS DEL FORMULARIO
-    $("#id_compra").val('0');
-    $("#iptNroVenta").val('');
-    $("#iptObservacion").val('');
-    $("#iptEfectivoRecibido").val('');
-    $("#chkEfectivoExacto").prop('checked', false);
-
-    // RESETEAR SELECT2 (con trigger para actualizar visual)
-    $("#selCliente").val('0').trigger('change');
-    $("#selDocumentoVenta").val('0').trigger('change');
-    $("#selTipoPago").val('1').trigger('change');
-    <?php if ($perfil_usuario != 2): ?>
-    $("#selVendedor").val('0').trigger('change');
-    <?php else: ?>
-    // Si el usuario es vendedor, mantener su ID como valor oculto
-    $("#selVendedor").val('<?php echo $usuarioID; ?>');
-    <?php endif; ?>
-
-    // LIMPIAR EFECTIVO Y VUELTO
-    $("#EfectivoEntregado").html('0.00');
-    $("#Vuelto").html('0.00');
-
-    // RESETEAR RESUMEN
-    $("#resumen_subtotal").html('Bs. 0.00');
-    $("#resumen_total_descuento").html('Bs. 0.00');
-    $("#resumen_total_venta").html('Bs. 0.00');
-
-    // LIMPIAR DATATABLE DE PRODUCTOS AGREGADOS
-    if ($.fn.DataTable.isDataTable('#tbl_ListadoProductos')) {
-      $('#tbl_ListadoProductos').DataTable().clear().draw();
+    },
+    columnDefs: [{
+        targets: 0,
+        orderable: false,
+        className: 'control'
+      },
+      {
+        targets: [0, 2, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+        visible: false
+      },
+      {
+        targets: 1,
+        orderable: false,
+        className: 'text-center',
+        createdCell: function(td, cellData, rowData, row, col) {
+          $(td).html(
+            "<span class='btnSeleccionarProducto' style='cursor:pointer; padding: 5px 10px; border-radius: 5px; transition: all 0.3s ease;'>" +
+            "<i class='fas fa-check-circle fs-5 text-success'></i>" +
+            "</span>")
+        }
+      }
+    ],
+    language: {
+      url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+    },
+    createdRow: function(row, data, dataIndex) {
+      $(row).css('vertical-align', 'middle');
+    },
+    initComplete: function(settings, json) {
+      // Mejorar botones de DataTables
+      $('.dt-buttons').addClass('mb-3 d-flex gap-2');
+      if (!$("#mdlListadoProductos").hasClass('show')) {
+        $("#mdlListadoProductos").modal('show');
+      }
     }
+  })
 
-    // RECARGAR EL NRO DE BOLETA
-    CargarNroBoleta();
+  ajustarHeadersDataTables($("#tbl_productos"))
 
-    // RECARGAR LA TABLA DE LISTADO DE COMPRAS
-    fnc_CargarDataTableListadoCompras();
+}
+
+function ajustarHeadersDataTables(element) {
+
+  var observer = window.ResizeObserver ? new ResizeObserver(function(entries) {
+    entries.forEach(function(entry) {
+      $(entry.target).DataTable().columns.adjust();
+    });
+  }) : null;
+
+  // Function to add a datatable to the ResizeObserver entries array
+  resizeHandler = function($table) {
+    if (observer)
+      observer.observe($table[0]);
+  };
+
+  // Initiate additional resize handling on datatable
+  resizeHandler(element);
+
+}
+
+/*===================================================================*/
+//FUNCION PARA CARGAR EL NRO DE BOLETA
+/*===================================================================*/
+function CargarNroBoleta() {
+
+  $.ajax({
+    async: false,
+    url: "ajax/ventas.ajax.php",
+    method: "POST",
+    data: {
+      'accion': 1
+    },
+    dataType: 'json',
+    success: function(respuesta) {
+
+      serie_boleta = respuesta["serie_boleta"];
+      nro_boleta = respuesta["nro_venta"];
+
+      //$("#iptNroSerie").val(serie_boleta);
+      $("#iptNroVenta").val(nro_boleta);
+    }
+  });
+}
+
+/*===================================================================*/
+//FUNCION PARA ACTUALIZAR EL VUELTO
+/*===================================================================*/
+function actualizarVuelto() {
+
+  //var totalVenta = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
+  var totalVenta = $("#resumen_total_venta").html();
+
+  $("#chkEfectivoExacto").prop('checked', false);
+
+  var efectivoRecibido = $("#iptEfectivoRecibido").val();
+
+  if (efectivoRecibido > 0) {
+
+    $("#EfectivoEntregado").html(parseFloat(efectivoRecibido).toFixed(2));
+
+    vuelto = parseFloat(efectivoRecibido) - parseFloat(totalVenta);
+
+    $("#Vuelto").html(parseFloat(vuelto).toFixed(2));
+
+  } else {
+
+    $("#EfectivoEntregado").html("0.00");
+    $("#Vuelto").html("0.00");
 
   }
+}
 
-  function fnc_ActualizarDatos() {
+/*===================================================================*/
+//CARGAR DATATABLE DE PRODUCTOS A COMPRAR
+/*===================================================================*/
+function fnc_CargarDataTableListadoProductos() {
 
-    $total_subtotal = 0;
-    $total_descuento = 0.00;
-    $total_compra = 0.00;
-
-    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-
-      var row = $('#tbl_ListadoProductos').DataTable().row(index);
-
-      var data = row.data();
-
-      // obtener cantidad
-      $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
-
-      //obtener precio venta
-      $precio_venta = $('#tbl_ListadoProductos').DataTable().cell(index, 6).data()
-
-      //obtener costo unitario
-      $descuento = $('#tbl_ListadoProductos').DataTable().cell(index, 8).data()
-
-      $subtotal = ($precio_venta * $cantidad);
-      $descuentoPor = $cantidad * (($precio_venta * $descuento) / 100);
-      $total = $subtotal - $descuentoPor;
-
-      $total_subtotal = $total_subtotal + $subtotal;
-      $total_compra = $total_compra + $total;
-      $total_descuento = $total_descuento + parseFloat($descuentoPor)
-      console.log("🚀 ~ file: compras.php:1495 ~ $ ~ $total_descuento:", $total_descuento)
-
-      $('#tbl_ListadoProductos').DataTable().cell(index, 9).data(parseFloat($subtotal).toFixed(2))
-      $('#tbl_ListadoProductos').DataTable().cell(index, 10).data(parseFloat($total).toFixed(2));
-
-    })
-
-    // $("#resumen_subtotal").html(parseFloat($total_subtotal).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    // $("#resumen_total_descuento").html(parseFloat($total_descuento).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    // $("#resumen_total_venta").html(parseFloat($total_compra).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    $("#resumen_subtotal").html(parseFloat($total_subtotal).toFixed(2));
-    $("#resumen_total_descuento").html(parseFloat($total_descuento).toFixed(2));
-    $("#resumen_total_venta").html(parseFloat($total_compra).toFixed(2));
+  if ($.fn.DataTable.isDataTable('#tbl_ListadoProductos')) {
+    $('#tbl_ListadoProductos').DataTable().destroy();
+    $('#tbl_ListadoProductos tbody').empty();
   }
 
-  function fnc_SeleccionarProducto(data) {
-    //alert("Producto seleccionado: " + data["codigo_producto"]);
-    CargarProductos(data["codigo_producto"])
+  $('#tbl_ListadoProductos').DataTable({
+    dom: 'Bfrtip',
+    buttons: ['pageLength'],
+    pageLength: [5, 10, 15, 30, 50, 100],
+    pageLength: 10,
+    columnDefs: [{
+        targets: [4, 6, 8],
+        visible: false
+      },
+      {
+        targets: [0],
+        orderable: false
+      }
+    ],
+
+    "columns": [{
+        "data": "acciones"
+      },
+      {
+        "data": "producto"
+      },
+      {
+        "data": "codigo_producto"
+      },
+      {
+        "data": "cantidad"
+      },
+      {
+        "data": "cantidad_temp"
+      },
+      {
+        "data": "precio_venta"
+      },
+      {
+        "data": "precio_venta_temp"
+      },
+      {
+        "data": "descuento"
+      },
+      {
+        "data": "descuento_temp"
+      },
+      {
+        "data": "subTotal"
+      },
+      {
+        "data": "total"
+      }
+    ],
+    // "order": [
+    //     [1, 'desc']
+    // ],
+
+    fixedColumns: {
+      left: 2,
+      right: 1
+    },
+    scrollX: true,
+    "language": {
+      "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+    }
+  });
+
+  //ajustarHeadersDataTables($("#tbl_ListadoProductos"))
+}
+
+function CargarProductos(producto = "") {
+
+  /*===================================================================*/
+  // AUMENTAMOS LA CANTIDAD SI EL PRODUCTO YA EXISTE EN EL LISTADO
+  /*===================================================================*/
+  $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
+
+    var row = $('#tbl_ListadoProductos').DataTable().row(index);
+    var data = row.data();
+
+    if (producto == data['codigo_producto']) {
+      mensajeToast("warning", "El producto ya fue agregado al listado");
+      exit;
+    }
+  })
+
+
+  $.ajax({
+    url: "ajax/productos_inventario.ajax.php",
+    method: "POST",
+    data: {
+      'accion': 'obtener_producto', //BUSCAR PRODUCTOS POR SU CODIGO DE BARRAS
+      'codigo_producto': producto
+    },
+    dataType: 'json',
+    success: function(respuesta) {
+
+      /*===================================================================*/
+      //SI LA RESPUESTA ES VERDADERO, TRAE ALGUN DATO
+      /*===================================================================*/
+      if (respuesta) {
+
+        $('#tbl_ListadoProductos').DataTable().row.add({
+          'acciones': "<center>" +
+            "<span class='btnEliminarproducto text-danger px-1'style='cursor:pointer;' data-bs-toggle='tooltip' data-bs-placement='top' title='Eliminar producto'> " +
+            "<i class='fas fa-trash fs-6'> </i> " +
+            "</span>" +
+            "</center>",
+          'producto': respuesta['nombre'],
+          'codigo_producto': respuesta['codigo_producto'],
+          'cantidad': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
+            respuesta['codigo_producto'] +
+            '" class="form-control text-center iptCantidad p-0 m-0 px-2" value="1">',
+          'cantidad_temp': 1,
+          'precio_venta': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
+            respuesta['codigo_producto'] +
+            '" class="form-control text-center iptCostoUnitario p-0 m-0 px-2" value="' +
+            respuesta['precio_venta'] + '">',
+          'precio_venta_temp': respuesta['precio_venta'],
+          'descuento': '<input min="0" type="number" step="0.01" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : (event.charCode >= 46 && event.charCode <= 57) || event.charCode == 13" style="width:80px; height:28px;" codigoProducto = "' +
+            respuesta['codigo_producto'] +
+            '" class="form-control text-center iptDescuento p-0 m-0 px-2" value="' +
+            respuesta['descuento'] + '">',
+          'descuento_temp': respuesta['descuento'],
+          'subTotal': 0,
+          'total': 0
+
+
+        }).draw();
+
+        fnc_ActualizarDatos();
+        mensajeToast("success", "Producto agregado")
+
+      } else {
+        mensajeToast('error', 'EL PRODUCTO NO EXISTE O NO TIENE STOCK');
+      }
+
+    }
+  });
+}
+
+/*==========================================================================================================================================
+L I M P I A R   I N P U T 'S   D E L   F O R M U L A R I O
+*=========================================================================================================================================*/
+function fnc_LimpiarFomulario() {
+
+  // LIMPIAR MENSAJES DE VALIDACIÓN
+  $(".needs-validation-registro-compras").removeClass("was-validated");
+  $(".form-floating").removeClass("was-validated");
+
+  // RESETEAR TODOS LOS INPUTS DEL FORMULARIO
+  $("#id_compra").val('0');
+  $("#iptNroVenta").val('');
+  $("#iptObservacion").val('');
+  $("#iptEfectivoRecibido").val('');
+  $("#chkEfectivoExacto").prop('checked', false);
+
+  // RESETEAR SELECT2 (con trigger para actualizar visual)
+  $("#selCliente").val('0').trigger('change');
+  $("#selDocumentoVenta").val('0').trigger('change');
+  $("#selTipoPago").val('1').trigger('change');
+  <?php if ($perfil_usuario != 2): ?>
+  $("#selVendedor").val('0').trigger('change');
+  <?php else: ?>
+  // Si el usuario es vendedor, mantener su ID como valor oculto
+  $("#selVendedor").val('<?php echo $usuarioID; ?>');
+  <?php endif; ?>
+
+  // LIMPIAR EFECTIVO Y VUELTO
+  $("#EfectivoEntregado").html('0.00');
+  $("#Vuelto").html('0.00');
+
+  // RESETEAR RESUMEN
+  $("#resumen_subtotal").html('Bs. 0.00');
+  $("#resumen_total_descuento").html('Bs. 0.00');
+  $("#resumen_total_venta").html('Bs. 0.00');
+
+  // LIMPIAR DATATABLE DE PRODUCTOS AGREGADOS
+  if ($.fn.DataTable.isDataTable('#tbl_ListadoProductos')) {
+    $('#tbl_ListadoProductos').DataTable().clear().draw();
   }
 
-  /*==========================================================================================================================================
+  // RECARGAR EL NRO DE BOLETA
+  CargarNroBoleta();
+
+  // RECARGAR LA TABLA DE LISTADO DE COMPRAS
+  fnc_CargarDataTableListadoCompras();
+
+}
+
+function fnc_ActualizarDatos() {
+
+  $total_subtotal = 0;
+  $total_descuento = 0.00;
+  $total_compra = 0.00;
+
+  $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
+
+    var row = $('#tbl_ListadoProductos').DataTable().row(index);
+
+    var data = row.data();
+
+    // obtener cantidad
+    $cantidad = $('#tbl_ListadoProductos').DataTable().cell(index, 4).data()
+
+    //obtener precio venta
+    $precio_venta = $('#tbl_ListadoProductos').DataTable().cell(index, 6).data()
+
+    //obtener costo unitario
+    $descuento = $('#tbl_ListadoProductos').DataTable().cell(index, 8).data()
+
+    $subtotal = ($precio_venta * $cantidad);
+    $descuentoPor = $cantidad * (($precio_venta * $descuento) / 100);
+    $total = $subtotal - $descuentoPor;
+
+    $total_subtotal = $total_subtotal + $subtotal;
+    $total_compra = $total_compra + $total;
+    $total_descuento = $total_descuento + parseFloat($descuentoPor)
+    console.log("🚀 ~ file: compras.php:1495 ~ $ ~ $total_descuento:", $total_descuento)
+
+    $('#tbl_ListadoProductos').DataTable().cell(index, 9).data(parseFloat($subtotal).toFixed(2))
+    $('#tbl_ListadoProductos').DataTable().cell(index, 10).data(parseFloat($total).toFixed(2));
+
+  })
+
+  // $("#resumen_subtotal").html(parseFloat($total_subtotal).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  // $("#resumen_total_descuento").html(parseFloat($total_descuento).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  // $("#resumen_total_venta").html(parseFloat($total_compra).toLocaleString('es-BO', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  $("#resumen_subtotal").html(parseFloat($total_subtotal).toFixed(2));
+  $("#resumen_total_descuento").html(parseFloat($total_descuento).toFixed(2));
+  $("#resumen_total_venta").html(parseFloat($total_compra).toFixed(2));
+}
+
+function fnc_SeleccionarProducto(data) {
+  //alert("Producto seleccionado: " + data["codigo_producto"]);
+  CargarProductos(data["codigo_producto"])
+}
+
+/*==========================================================================================================================================
 G U A R D A R   VENTA ADQUSICION
 *=========================================================================================================================================*/
-  function fnc_GuardarCompra() {
+function fnc_GuardarCompra() {
 
-    let count = 0;
-    let valores_en_cero = 0;
-    form_registro_compras_validate = validarFormulario('needs-validation-registro-compras');
+  let count = 0;
+  let valores_en_cero = 0;
+  form_registro_compras_validate = validarFormulario('needs-validation-registro-compras');
 
-    // VALIDACIONES
-    if (!form_registro_compras_validate) {
-      mensajeToast("error", "complete los datos obligatorios");
-      return;
+  // VALIDACIONES
+  if (!form_registro_compras_validate) {
+    mensajeToast("error", "complete los datos obligatorios");
+    return;
+  }
+
+  // Validar que cliente sea válido (no sea 0)
+  if ($("#selCliente").val() == 0 || $("#selCliente").val() == "") {
+    mensajeToast("error", "Debe seleccionar un cliente válido");
+    return;
+  }
+
+  // Validar que vendedor sea válido
+  <?php if ($perfil_usuario != 2): ?>
+  // Si el usuario no es vendedor, verificar que haya seleccionado uno
+  if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
+    mensajeToast("error", "Debe seleccionar un vendedor válido");
+    return;
+  }
+  <?php else: ?>
+  // Si el usuario es vendedor, validar que el ID esté presente
+  if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
+    mensajeToast("error", "Error con el vendedor asignado");
+    return;
+  }
+  <?php endif; ?>
+
+  $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
+    count = count + 1;
+
+    var row = $('#tbl_ListadoProductos').DataTable().row(index);
+
+    var data = row.data();
+
+
+    if (data['cantidad_temp'] == 0 || data["precio_venta_temp"] == 0 || data['cantidad_temp'] == '' ||
+      data["precio_venta_temp"] == '') {
+      valores_en_cero = 1;
+      // exit;
     }
+  });
 
-    // Validar que cliente sea válido (no sea 0)
-    if ($("#selCliente").val() == 0 || $("#selCliente").val() == "") {
-      mensajeToast("error", "Debe seleccionar un cliente válido");
-      return;
-    }
+  if (count == 0) {
+    mensajeToast("error", "Ingrese los productos de la compra");
+    return;
+  }
 
-    // Validar que vendedor sea válido
-    <?php if ($perfil_usuario != 2): ?>
-    // Si el usuario no es vendedor, verificar que haya seleccionado uno
-    if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
-      mensajeToast("error", "Debe seleccionar un vendedor válido");
-      return;
-    }
-    <?php else: ?>
-    // Si el usuario es vendedor, validar que el ID esté presente
-    if (parseInt($("#selVendedor").val()) == 0 || $("#selVendedor").val() == "") {
-      mensajeToast("error", "Error con el vendedor asignado");
-      return;
-    }
-    <?php endif; ?>
+  if (valores_en_cero == 1) {
+    mensajeToast("error", "Los valores de cantidad o costo unitario no pueden ser 0");
+    return;
+  }
+  //FIN DE LAS VALIDACIONES
 
-    $('#tbl_ListadoProductos').DataTable().rows().eq(0).each(function(index) {
-      count = count + 1;
+  Swal.fire({
+    title: 'Está seguro(a) de registrar la Venta Actual?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, deseo registrarla!',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
 
-      var row = $('#tbl_ListadoProductos').DataTable().row(index);
+    if (result.isConfirmed) {
 
-      var data = row.data();
+      detalle_productos = $("#tbl_ListadoProductos").DataTable().rows().data().toArray();
 
+      //$ope_gravadas = $("#resumen_opes_gravadas").html().replace('S/ ', '').trim();
+      //$ope_exoneradas = $("#resumen_opes_exoneradas").html().replace('S/ ', '').trim();
+      //$ope_inafectas = $("#resumen_opes_inafectas").html().replace('S/ ', '').trim();
+      //$total_igv = $("#resumen_total_igv").html().replace('S/ ', '').trim();
+      $total_descuento = $("#resumen_total_descuento").html().replace('Bs. ', '').trim().replace(',', '.');
+      $total = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
 
-      if (data['cantidad_temp'] == 0 || data["precio_venta_temp"] == 0 || data['cantidad_temp'] == '' ||
-        data["precio_venta_temp"] == '') {
-        valores_en_cero = 1;
-        // exit;
-      }
-    });
+      var formData = new FormData();
+      if ($("#id_compra").val() > 0) formData.append('accion', 'actualizar_compra');
+      else formData.append('accion', 'registrar_compra');
 
-    if (count == 0) {
-      mensajeToast("error", "Ingrese los productos de la compra");
-      return;
-    }
+      formData.append('id_compra', $("#id_compra").val());
+      formData.append('datos_compra', $("#frm-datos-registro-compras").serialize());
+      formData.append('arr_detalle_productos', JSON.stringify(detalle_productos));
+      formData.append('total_descuento', $total_descuento);
+      formData.append('total', $total);
 
-    if (valores_en_cero == 1) {
-      mensajeToast("error", "Los valores de cantidad o costo unitario no pueden ser 0");
-      return;
-    }
-    //FIN DE LAS VALIDACIONES
+      console.log("Enviando datos a compras.ajax.php:", {
+        action: formData.get('accion'),
+        id_compra: formData.get('id_compra'),
+        total_descuento: formData.get('total_descuento'),
+        total: formData.get('total')
+      });
 
-    Swal.fire({
-      title: 'Está seguro(a) de registrar la Venta Actual?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, deseo registrarla!',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
+      response = SolicitudAjax('ajax/compras.ajax.php', 'POST', formData);
 
-      if (result.isConfirmed) {
+      console.log("Respuesta recibida:", response);
 
-        detalle_productos = $("#tbl_ListadoProductos").DataTable().rows().data().toArray();
-
-        //$ope_gravadas = $("#resumen_opes_gravadas").html().replace('S/ ', '').trim();
-        //$ope_exoneradas = $("#resumen_opes_exoneradas").html().replace('S/ ', '').trim();
-        //$ope_inafectas = $("#resumen_opes_inafectas").html().replace('S/ ', '').trim();
-        //$total_igv = $("#resumen_total_igv").html().replace('S/ ', '').trim();
-        $total_descuento = $("#resumen_total_descuento").html().replace('Bs. ', '').trim().replace(',', '.');
-        $total = $("#resumen_total_venta").html().replace('Bs. ', '').trim().replace(',', '.');
-
-        var formData = new FormData();
-        if ($("#id_compra").val() > 0) formData.append('accion', 'actualizar_compra');
-        else formData.append('accion', 'registrar_compra');
-
-        formData.append('id_compra', $("#id_compra").val());
-        formData.append('datos_compra', $("#frm-datos-registro-compras").serialize());
-        formData.append('arr_detalle_productos', JSON.stringify(detalle_productos));
-        formData.append('total_descuento', $total_descuento);
-        formData.append('total', $total);
-
-        console.log("Enviando datos a compras.ajax.php:", {
-          action: formData.get('accion'),
-          id_compra: formData.get('id_compra'),
-          total_descuento: formData.get('total_descuento'),
-          total: formData.get('total')
-        });
-        
-        response = SolicitudAjax('ajax/compras.ajax.php', 'POST', formData);
-        
-        console.log("Respuesta recibida:", response);
-        
-        // Protección: si la respuesta no existe o no tiene el formato esperado
-        if (typeof response === 'undefined' || response === null) {
-          console.error('SolicitudAjax returned undefined or null');
-          console.error('FormData enviado:', Array.from(formData.entries()));
-          Swal.fire({
-            position: 'top',
-            icon: 'error',
-            title: 'Error en la solicitud. No se recibió respuesta del servidor.',
-            text: 'Revise la consola para más detalles.',
-            showConfirmButton: true
-          });
-          return;
-        }
-
-        // Asegurar propiedades por defecto
-        var tipo = response.tipo_msj ? response.tipo_msj : 'error';
-        var msj = response.msj ? response.msj : 'Respuesta inválida del servidor.';
-
+      // Protección: si la respuesta no existe o no tiene el formato esperado
+      if (typeof response === 'undefined' || response === null) {
+        console.error('SolicitudAjax returned undefined or null');
+        console.error('FormData enviado:', Array.from(formData.entries()));
         Swal.fire({
           position: 'top',
-          icon: tipo,
-          title: msj,
+          icon: 'error',
+          title: 'Error en la solicitud. No se recibió respuesta del servidor.',
+          text: 'Revise la consola para más detalles.',
           showConfirmButton: true
+        });
+        return;
+      }
+
+      // Asegurar propiedades por defecto
+      var tipo = response.tipo_msj ? response.tipo_msj : 'error';
+      var msj = response.msj ? response.msj : 'Respuesta inválida del servidor.';
+
+      Swal.fire({
+        position: 'top',
+        icon: tipo,
+        title: msj,
+        showConfirmButton: true
+      })
+
+      var nro_boleta = $("#iptNroVenta").val();
+
+      if (response.tipo_msj == "success") {
+
+        //consulta para imprimir la boleta
+        Swal.fire({
+
+          title: 'Decea IMPRIMIR la nota de Venta?',
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si, deceo imprimir!',
+          cancelButtonText: 'No, deceo imprimir por ahora!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+
+
+            window.open("http://localhost/faraonbd//ajax/extensiones/fpdf/boleta_venta.php?codigo=" +
+              nro_boleta);
+            //window.open("https://faraonv2.infinitassoluciones.net//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
+
+
+          }
         })
 
-        var nro_boleta = $("#iptNroVenta").val();
+        fnc_LimpiarFomulario();
 
-        if (response.tipo_msj == "success") {
-          
-           //consulta para imprimir la boleta
-           Swal.fire({
+        CargarNroBoleta();
 
-            title: 'Decea IMPRIMIR la nota de Venta?',
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, deceo imprimir!',
-            cancelButtonText: 'No, deceo imprimir por ahora!',
-          }).then((result) => {
-            if (result.isConfirmed) {
-
-                           
-                  window.open("http://localhost/faraonbd//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
-                  //window.open("https://faraonv2.infinitassoluciones.net//ajax/extensiones/fpdf/boleta_venta.php?codigo=" + nro_boleta);
-                
-             
-            }
-          })
-
-          fnc_LimpiarFomulario();
-
-          CargarNroBoleta();
-
-
-        }
 
       }
 
-    })
-  }
+    }
+
+  })
+}
 </script>
